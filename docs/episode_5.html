@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Functional analysis – RNA-seq data analysis workflow</title>
+<title>episode_5 – RNA-seq data analysis workflow</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Functional analysis – RNA-seq data analysis workflow">
+<meta property="og:title" content="– RNA-seq data analysis workflow">
 <meta property="og:description" content="">
 <meta property="og:image" content="theme_images/over-rep_theme.png">
 <meta property="og:site_name" content="RNA-seq data analysis workflow">
@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./day_2_overview.html">Day Two</a></li><li class="breadcrumb-item"><a href="./episode_5.html">Functional analysis</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./episode_5.html">Functional analysis</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -163,64 +163,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Background</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./day_1_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Day One</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Sequence Quality - FastQC, MultiQC and Cutadapt</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quantifying Gene Expression</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_3.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Exploratory Analysis</span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./day_2_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Day Two</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_4.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Identify Differentially Expressed Genes</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_5.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Functional analysis</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_6.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusions</span></a>
   </div>
 </li>
-      </ul>
-  </li>
     </ul>
     </div>
 </nav>
@@ -231,7 +209,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Contents</h2>
    
   <ul>
-  <li><a href="#annotation" id="toc-annotation" class="nav-link active" data-scroll-target="#annotation">Annotation</a></li>
+  <li><a href="#functional-analysis" id="toc-functional-analysis" class="nav-link active" data-scroll-target="#functional-analysis">Functional analysis</a>
+  <ul class="collapse">
+  <li><a href="#annotation" id="toc-annotation" class="nav-link" data-scroll-target="#annotation">Annotation</a></li>
   <li><a href="#over-representation-analysis" id="toc-over-representation-analysis" class="nav-link" data-scroll-target="#over-representation-analysis">Over-representation Analysis</a>
   <ul class="collapse">
   <li><a href="#the-hypergeometric-distribution" id="toc-the-hypergeometric-distribution" class="nav-link" data-scroll-target="#the-hypergeometric-distribution">The hypergeometric distribution</a></li>
@@ -239,37 +219,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#goseq" id="toc-goseq" class="nav-link" data-scroll-target="#goseq">GOseq</a></li>
   <li><a href="#closing-thoughts-on-goseq" id="toc-closing-thoughts-on-goseq" class="nav-link" data-scroll-target="#closing-thoughts-on-goseq">Closing thoughts on GOseq</a></li>
   </ul></li>
-  <li><a href="#gene-set-enrichment-analysis-and-clusterprofiler" id="toc-gene-set-enrichment-analysis-and-clusterprofiler" class="nav-link" data-scroll-target="#gene-set-enrichment-analysis-and-clusterprofiler">Gene set enrichment analysis and clusterProfiler</a>
+  <li><a href="#other-functional-analyses" id="toc-other-functional-analyses" class="nav-link" data-scroll-target="#other-functional-analyses">Other functional analyses</a>
   <ul class="collapse">
-  <li><a href="#gsea" id="toc-gsea" class="nav-link" data-scroll-target="#gsea">GSEA</a></li>
+  <li><a href="#gene-set-enrichment-analysis-gsea" id="toc-gene-set-enrichment-analysis-gsea" class="nav-link" data-scroll-target="#gene-set-enrichment-analysis-gsea">Gene set enrichment analysis (GSEA)</a></li>
   <li><a href="#clusterprofiler" id="toc-clusterprofiler" class="nav-link" data-scroll-target="#clusterprofiler">ClusterProfiler</a></li>
   <li><a href="#gsea-clusterprofiler-and-length-correction" id="toc-gsea-clusterprofiler-and-length-correction" class="nav-link" data-scroll-target="#gsea-clusterprofiler-and-length-correction">GSEA, clusterProfiler and length correction</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./day_2_overview.html">Day Two</a></li><li class="breadcrumb-item"><a href="./episode_5.html">Functional analysis</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">Functional analysis</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
+<section id="functional-analysis" class="level1">
+<h1>Functional analysis</h1>
 <div class="grid">
 <div class="g-col-6">
 <p><img src="theme_images/over-rep_theme.png" class="img-fluid" style="width:70.0%"></p>
@@ -696,14 +663,14 @@ Secondary: GO:0007046</code></pre>
 <p>GOSeq is a powerful tool that corrects for an important bias in RNA-seq data. There are other options when it comes to over-representation analysis, and functional analysis in general. Some of these tools might help with generating better visualisations, or claim to have more up-to-date databases.</p>
 </section>
 </section>
-<section id="gene-set-enrichment-analysis-and-clusterprofiler" class="level2">
-<h2 class="anchored" data-anchor-id="gene-set-enrichment-analysis-and-clusterprofiler">Gene set enrichment analysis and clusterProfiler</h2>
-<p>We will not complete a full demonstration of gene set enrichment analysis (GSEA) and clusterProfiler, but we will give an overview of these techniques and tools.</p>
-<p>In particular we strongly recommend The Carpentries workshop <a href="https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#ora-with-clusterprofiler">RNA-seq analysis with Bioconductor</a> section on GSEA.</p>
-<section id="gsea" class="level3">
-<h3 class="anchored" data-anchor-id="gsea">GSEA</h3>
+<section id="other-functional-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="other-functional-analyses">Other functional analyses</h2>
+<p><strong>FIX THIS SECTION</strong></p>
+<section id="gene-set-enrichment-analysis-gsea" class="level3">
+<h3 class="anchored" data-anchor-id="gene-set-enrichment-analysis-gsea">Gene set enrichment analysis (GSEA)</h3>
 <p>GSEA takes an alternative approach to the previous section in that it does not take as input a list of differentially expressed genes. GSEA moves away from the binary “differentially expressed or not” approach and considers the state, or position, of all genes in the list.</p>
 <p>This approach has the advantage of not relying on our somewhat arbitrary cutoff thresholds (<em>e.g.,</em> a gene with a p-value 0.0501 probably should still contribute to what we think is happening to a pathway).</p>
+<p><strong>FIX THIS SECTION</strong> In particular we strongly recommend The Carpentries workshop <a href="https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#ora-with-clusterprofiler">RNA-seq analysis with Bioconductor</a> section on GSEA.</p>
 </section>
 <section id="clusterprofiler" class="level3">
 <h3 class="anchored" data-anchor-id="clusterprofiler">ClusterProfiler</h3>
@@ -736,6 +703,7 @@ Secondary: GO:0007046</code></pre>
 </div>
 
 
+</section>
 </section>
 </section>
 

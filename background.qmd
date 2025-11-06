@@ -1,17 +1,29 @@
 ---
-title: The RNA-seq workflow
+title: "Background"
 code-overflow: wrap
 ---
+
+## Getting started with RNA-seq data analysis
+
+This workshop aims to get you started with analysing your own RNA-seq data by providing an example workflow. At each of the major steps in the workflow we will examine issues that could confound your analysis and consider how different available methods address these issues. 
+
+Rather than prescribing what methods you should use, this workshop aims to make the user aware of the biological and statistical challenges involved in analysing RNA-seq data and asks how different methods address those challenges. By the end of this workshop you should be familiar with the general workflow of RNA-seq analysis and be ready to ask informed questions about the specific methods you should select going forward. 
+
+The workshop includes a small example dataset which will be used by the workshop Instructor to demonstrate an analysis. Attendees may choose to follow along with the analysis in real time or they may choose to focus on note-taking. The workshop includes short exercises to highlight key messages and reinforce your understanding. 
+
+#### Background knowledge
+This workflow assumes you are familiar with transcriptomic and biological concepts. In particular, it assumes you are familar with the concept of sequencing libraries and with the data format (i.e., FASTA and FASTQ files). For more information on these topics, see the [Data Carpentry lesson](https://datacarpentry.github.io/wrangling-genomics/index.html) which describes the FASTQ format (i.e., files that contain reads and quality scores for the bases in each read) and [NGS basics by Illumina](https://sapac.illumina.com/science/technology/next-generation-sequencing/beginners.html), which describes the full process of sample to data, and further details on chosing an [NGS RNA library preparation method](https://sapac.illumina.com/techniques/sequencing/ngs-library-prep/rna.html), which describes different Illumina kits for prepping your RNA sample into a sequenceable library. 
+
+
+
+## The RNA-seq workflow overview
+
 
 - What are the key steps in an RNA-seq data analysis workflow? 
 
 - What are the peculiar features of RNA-seq data, and how do we address these features to make sure our analysis is unbiased and accurate? 
 
 - What methods are available to handle RNA-seq data analysis?
-
-
-
-## The RNA-seq workflow overview
 
 We will assume that the aim of our RNA-seq experiment is to identify a set of genes which are differentially expressed between two or more groups, and to derive biologically meaningful information from our gene list(s). 
 

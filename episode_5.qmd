@@ -1,10 +1,12 @@
 ---
-title: Functional analysis
+title: ""
 code-overflow: wrap
 editor: 
   markdown: 
     wrap: sentence
 ---
+
+# Functional analysis
 
 ::: {.grid}
 ::: {.g-col-6}
@@ -275,22 +277,25 @@ GOSeq is a powerful tool that corrects for an important bias in RNA-seq data. Th
 
 
 
-## Gene set enrichment analysis and clusterProfiler
-
-We will not complete a full demonstration of gene set enrichment analysis (GSEA) and clusterProfiler, but we will give an overview of these techniques and tools. 
-
-In particular we strongly recommend The Carpentries workshop [RNA-seq analysis with Bioconductor](https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#ora-with-clusterprofiler) section on GSEA. 
 
 
-### GSEA
+## Other functional analyses 
+**FIX THIS SECTION**
+
+### Gene set enrichment analysis (GSEA)
 
 GSEA takes an alternative approach to the previous section in that it does not take as input a list of differentially expressed genes. GSEA moves away from the binary "differentially expressed or not" approach and considers the state, or position, of all genes in the list. 
 
 This approach has the advantage of not relying on our somewhat arbitrary cutoff thresholds (*e.g.,* a gene with a p-value 0.0501 probably should still contribute to what we think is happening to a pathway). 
 
+**FIX THIS SECTION**
+In particular we strongly recommend The Carpentries workshop [RNA-seq analysis with Bioconductor](https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#ora-with-clusterprofiler) section on GSEA. 
+
+
 ### ClusterProfiler
 
 ClusterProfiler is a widely used package with the support to create *excellent* figures ([check these out](https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#visualization)). 
+
 
 ### GSEA, clusterProfiler and length correction
 

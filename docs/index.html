@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RNA-seq Data Analysis – RNA-seq data analysis workflow</title>
+<title>Otago Bioinformatics Spring School 2025 – RNA-seq data analysis workflow</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="RNA-seq Data Analysis – RNA-seq data analysis workflow">
+<meta property="og:title" content="Otago Bioinformatics Spring School 2025 – RNA-seq data analysis workflow">
 <meta property="og:description" content="">
 <meta property="og:image" content="theme_images/main_image.png">
 <meta property="og:site_name" content="RNA-seq data analysis workflow">
@@ -127,64 +127,42 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Background</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./day_1_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Day One</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Sequence Quality - FastQC, MultiQC and Cutadapt</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quantifying Gene Expression</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_3.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Exploratory Analysis</span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./day_2_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Day Two</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_4.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Identify Differentially Expressed Genes</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_5.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Functional analysis</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_6.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusions</span></a>
   </div>
 </li>
-      </ul>
-  </li>
     </ul>
     </div>
 </nav>
@@ -195,12 +173,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Contents</h2>
    
   <ul>
-  <li><a href="#getting-started-with-rna-seq-data-analysis" id="toc-getting-started-with-rna-seq-data-analysis" class="nav-link active" data-scroll-target="#getting-started-with-rna-seq-data-analysis">Getting started with RNA-seq data analysis</a></li>
-  <li><a href="#workshop-timeline" id="toc-workshop-timeline" class="nav-link" data-scroll-target="#workshop-timeline">Workshop timeline</a>
-  <ul class="collapse">
-  <li><a href="#day-1" id="toc-day-1" class="nav-link" data-scroll-target="#day-1">Day 1</a></li>
-  <li><a href="#day-2" id="toc-day-2" class="nav-link" data-scroll-target="#day-2">Day 2</a></li>
-  </ul></li>
+  <li><a href="#rna-seq-data-analysis" id="toc-rna-seq-data-analysis" class="nav-link active" data-scroll-target="#rna-seq-data-analysis">RNA-seq Data Analysis</a></li>
+  <li><a href="#workshop-schedule" id="toc-workshop-schedule" class="nav-link" data-scroll-target="#workshop-schedule">Workshop schedule</a></li>
   <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
   <li><a href="#attribution-notice" id="toc-attribution-notice" class="nav-link" data-scroll-target="#attribution-notice">Attribution notice</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
@@ -212,7 +186,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">RNA-seq Data Analysis</h1>
+<h1 class="title">Otago Bioinformatics Spring School 2025</h1>
 </div>
 
 
@@ -229,65 +203,79 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="rna-seq-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="rna-seq-data-analysis">RNA-seq Data Analysis</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="theme_images/main_image.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<p><img src="theme_images/main_image.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
-<section id="getting-started-with-rna-seq-data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started-with-rna-seq-data-analysis">Getting started with RNA-seq data analysis</h2>
-<p>This workshop aims to get you started with analysing your own RNA-seq data by providing an example workflow. At each of the major steps in the workflow we will examine issues that could confound your analysis and consider how different available methods address these issues.</p>
-<p>Rather than prescribing what methods you should use, this workshop aims to make the user aware of the biological and statistical challenges involved in analysing RNA-seq data and asks how different methods address those challenges. By the end of this workshop you should be familiar with the general workflow of RNA-seq analysis and be ready to ask informed questions about the specific methods you should select going forward.</p>
-<p>The workshop includes a small example dataset which will be used by the workshop Instructor to demonstrate an analysis. Attendees may choose to follow along with the analysis in real time or they may choose to focus on note-taking. The workshop includes short exercises to highlight key messages and reinforce your understanding.</p>
-<section id="background-knowledge" class="level4">
-<h4 class="anchored" data-anchor-id="background-knowledge">Background knowledge</h4>
-<p>This workflow assumes you are familiar with transcriptomic and biological concepts. In particular, it assumes you are familar with the concept of sequencing libraries and with the data format (i.e., FASTA and FASTQ files). For more information on these topics, see the <a href="https://datacarpentry.github.io/wrangling-genomics/index.html">Data Carpentry lesson</a> which describes the FASTQ format (i.e., files that contain reads and quality scores for the bases in each read) and <a href="https://sapac.illumina.com/science/technology/next-generation-sequencing/beginners.html">NGS basics by Illumina</a>, which describes the full process of sample to data, and further details on chosing an <a href="https://sapac.illumina.com/techniques/sequencing/ngs-library-prep/rna.html">NGS RNA library preparation method</a>, which describes different Illumina kits for prepping your RNA sample into a sequenceable library.</p>
 </section>
-</section>
-<section id="workshop-timeline" class="level2">
-<h2 class="anchored" data-anchor-id="workshop-timeline">Workshop timeline</h2>
-<p>This workshop runs over two mornings, from 9am - 1pm. We will take 10 min breaks approximately once every hour.</p>
-<section id="day-1" class="level3">
-<h3 class="anchored" data-anchor-id="day-1">Day 1</h3>
-<section id="an-overview-of-rna-seq-data-analysis-workflows" class="level4">
-<h4 class="anchored" data-anchor-id="an-overview-of-rna-seq-data-analysis-workflows"><a href="./background.html">An overview of RNA-seq data analysis workflows</a></h4>
-</section>
-<section id="quality-assessment" class="level4">
-<h4 class="anchored" data-anchor-id="quality-assessment"><a href="./episode_1.html#quality-assessment-with-fastqc">Quality assessment</a></h4>
-</section>
-<section id="adaptor-trimming-and-filtering" class="level4">
-<h4 class="anchored" data-anchor-id="adaptor-trimming-and-filtering"><a href="./episode_1.html#cleaning-reads">Adaptor trimming and filtering</a></h4>
-</section>
-<section id="mapping-and-counting-methods" class="level4">
-<h4 class="anchored" data-anchor-id="mapping-and-counting-methods"><a href="./episode_2.html">Mapping and counting methods</a></h4>
-</section>
-<section id="exploratory-analysis" class="level4">
-<h4 class="anchored" data-anchor-id="exploratory-analysis"><a href="./episode_3.html">Exploratory analysis</a></h4>
-</section>
-</section>
-<section id="day-2" class="level3">
-<h3 class="anchored" data-anchor-id="day-2">Day 2</h3>
-<section id="concepts-for-identifying-differentially-expressed-genes" class="level4">
-<h4 class="anchored" data-anchor-id="concepts-for-identifying-differentially-expressed-genes"><a href="./episode_4.html">Concepts for identifying differentially expressed genes</a></h4>
-</section>
-<section id="limma-for-differentially-expressed-genes" class="level4">
-<h4 class="anchored" data-anchor-id="limma-for-differentially-expressed-genes"><a href="./episode_4.html#identifying-differentially-expressed-genes-using-limma">Limma for differentially expressed genes</a></h4>
-</section>
-<section id="deseq2-for-differentially-expressed-genes" class="level4">
-<h4 class="anchored" data-anchor-id="deseq2-for-differentially-expressed-genes"><a href="./episode_4.html#identifying-differentially-expressed-genes-using-deseq2">DESeq2 for differentially expressed genes</a></h4>
-</section>
-<section id="over-representation-analysis" class="level4">
-<h4 class="anchored" data-anchor-id="over-representation-analysis"><a href="./episode_5.html">Over-representation analysis</a></h4>
-</section>
-</section>
+<section id="workshop-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="workshop-schedule">Workshop schedule</h2>
+<p><strong>Thursday 20th November, 2025</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Approx time</th>
+<th>Item</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>09:30 - 10:00</td>
+<td>RNA-seq presentation by Dr Katerina Achilleos.</td>
+</tr>
+<tr class="even">
+<td>10:00 - 10:45</td>
+<td><a href="./background.html">An overview of RNA-seq data analysis workflows</a></td>
+</tr>
+<tr class="odd">
+<td>. . .</td>
+<td><a href="./episode_1.html">Sequence Quality</a></td>
+</tr>
+<tr class="even">
+<td>10:45 - 11:00</td>
+<td>BREAK</td>
+</tr>
+<tr class="odd">
+<td>11:00 - 12:15</td>
+<td><a href="./episode_2.html">Quantifying Gene Expression</a></td>
+</tr>
+<tr class="even">
+<td>12:15 - 13:00</td>
+<td>LUNCH</td>
+</tr>
+<tr class="odd">
+<td>13:00 - 14:30</td>
+<td><a href="./episode_3.html">Exploratory analysis</a></td>
+</tr>
+<tr class="even">
+<td>14:30 - 14:45</td>
+<td>BREAK</td>
+</tr>
+<tr class="odd">
+<td>14:45 - 16:30</td>
+<td><a href="./episode_4.html">Identifying differentially expressed genes</a></td>
+</tr>
+<tr class="even">
+<td>. . .</td>
+<td><a href="./episode_5.html">Functional analysis</a></td>
+</tr>
+<tr class="odd">
+<td>16:30</td>
+<td>END OF DAY</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<p>During the workshop, code will be run in real-time to demonstrate the analysis. This will be run on the REANNZ OpenOnDemand platform which already has all the required software and R packages installed.</p>
+<p>During the workshop, code will be run in real-time to demonstrate the analysis. This will be run on the REANNZ Open OnDemand platform which already has all the required software and R packages installed.</p>
 </section>
 <section id="attribution-notice" class="level2">
 <h2 class="anchored" data-anchor-id="attribution-notice">Attribution notice</h2>
-<p>This workshop is an updated version on an existing version of <a href="https://genomicsaotearoa.github.io/RNA-seq-workshop-on-demand/">RNA-seq data analysis by Genomics Aotearoa and REANNZ (formerly NeSI)</a>. It incorporates, and takes inspiration from, various training materials produced by the <a href="https://github.com/hbctraining">Harvard Bioinformatics Core</a> and from The Carpentries, specifically their <a href="https://carpentries-incubator.github.io/bioc-rnaseq/index.html">RNA-seq analysis with Bioconductor workshop</a>.</p>
+<p>This workshop is an adapted version of the <a href="https://genomicsaotearoa.github.io/RNA-seq-data-analysis-workflow/">Genomics Aotearoa RNA-seq Data Analysis workshop</a>, modified to be taught in one day.</p>
 </section>
 <section id="section" class="level1" style="background: #e6f2e6; text-align:center;">
 <h1 style="background: #e6f2e6; text-align:center;"></h1>

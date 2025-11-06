@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The RNA-seq workflow – RNA-seq data analysis workflow</title>
+<title>Background – RNA-seq data analysis workflow</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./day_1_overview.html" rel="next">
+<link href="./episode_1.html" rel="next">
 <link href="./index.html" rel="prev">
 <link href="./theme_images/GA-image-black-favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="The RNA-seq workflow – RNA-seq data analysis workflow">
+<meta property="og:title" content="Background – RNA-seq data analysis workflow">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="RNA-seq data analysis workflow">
 </head>
@@ -127,64 +127,42 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Background</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./day_1_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Day One</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Sequence Quality - FastQC, MultiQC and Cutadapt</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quantifying Gene Expression</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_3.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Exploratory Analysis</span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./day_2_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Day Two</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_4.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Identify Differentially Expressed Genes</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_5.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Functional analysis</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./episode_6.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusions</span></a>
   </div>
 </li>
-      </ul>
-  </li>
     </ul>
     </div>
 </nav>
@@ -195,7 +173,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Contents</h2>
    
   <ul>
-  <li><a href="#the-rna-seq-workflow-overview" id="toc-the-rna-seq-workflow-overview" class="nav-link active" data-scroll-target="#the-rna-seq-workflow-overview">The RNA-seq workflow overview</a>
+  <li><a href="#getting-started-with-rna-seq-data-analysis" id="toc-getting-started-with-rna-seq-data-analysis" class="nav-link active" data-scroll-target="#getting-started-with-rna-seq-data-analysis">Getting started with RNA-seq data analysis</a></li>
+  <li><a href="#the-rna-seq-workflow-overview" id="toc-the-rna-seq-workflow-overview" class="nav-link" data-scroll-target="#the-rna-seq-workflow-overview">The RNA-seq workflow overview</a>
   <ul class="collapse">
   <li><a href="#core-steps-in-a-common-workflow" id="toc-core-steps-in-a-common-workflow" class="nav-link" data-scroll-target="#core-steps-in-a-common-workflow">Core steps in a common workflow:</a></li>
   </ul></li>
@@ -215,7 +194,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">The RNA-seq workflow</h1>
+<h1 class="title">Background</h1>
 </div>
 
 
@@ -232,13 +211,23 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="getting-started-with-rna-seq-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started-with-rna-seq-data-analysis">Getting started with RNA-seq data analysis</h2>
+<p>This workshop aims to get you started with analysing your own RNA-seq data by providing an example workflow. At each of the major steps in the workflow we will examine issues that could confound your analysis and consider how different available methods address these issues.</p>
+<p>Rather than prescribing what methods you should use, this workshop aims to make the user aware of the biological and statistical challenges involved in analysing RNA-seq data and asks how different methods address those challenges. By the end of this workshop you should be familiar with the general workflow of RNA-seq analysis and be ready to ask informed questions about the specific methods you should select going forward.</p>
+<p>The workshop includes a small example dataset which will be used by the workshop Instructor to demonstrate an analysis. Attendees may choose to follow along with the analysis in real time or they may choose to focus on note-taking. The workshop includes short exercises to highlight key messages and reinforce your understanding.</p>
+<section id="background-knowledge" class="level4">
+<h4 class="anchored" data-anchor-id="background-knowledge">Background knowledge</h4>
+<p>This workflow assumes you are familiar with transcriptomic and biological concepts. In particular, it assumes you are familar with the concept of sequencing libraries and with the data format (i.e., FASTA and FASTQ files). For more information on these topics, see the <a href="https://datacarpentry.github.io/wrangling-genomics/index.html">Data Carpentry lesson</a> which describes the FASTQ format (i.e., files that contain reads and quality scores for the bases in each read) and <a href="https://sapac.illumina.com/science/technology/next-generation-sequencing/beginners.html">NGS basics by Illumina</a>, which describes the full process of sample to data, and further details on chosing an <a href="https://sapac.illumina.com/techniques/sequencing/ngs-library-prep/rna.html">NGS RNA library preparation method</a>, which describes different Illumina kits for prepping your RNA sample into a sequenceable library.</p>
+</section>
+</section>
+<section id="the-rna-seq-workflow-overview" class="level2">
+<h2 class="anchored" data-anchor-id="the-rna-seq-workflow-overview">The RNA-seq workflow overview</h2>
 <ul>
 <li><p>What are the key steps in an RNA-seq data analysis workflow?</p></li>
 <li><p>What are the peculiar features of RNA-seq data, and how do we address these features to make sure our analysis is unbiased and accurate?</p></li>
 <li><p>What methods are available to handle RNA-seq data analysis?</p></li>
 </ul>
-<section id="the-rna-seq-workflow-overview" class="level2">
-<h2 class="anchored" data-anchor-id="the-rna-seq-workflow-overview">The RNA-seq workflow overview</h2>
 <p>We will assume that the aim of our RNA-seq experiment is to identify a set of genes which are differentially expressed between two or more groups, and to derive biologically meaningful information from our gene list(s).</p>
 <p>Assuming this is the case, there are many methods that can be applied to this type of analysis and this can be overwhelming. Here we will look at what we call the core workflow - the major steps that you will take to go from the raw FASTA files (the output from an RNA-seq experiment) to an informative list of differentially expressed genes.</p>
 <section id="core-steps-in-a-common-workflow" class="level3">
@@ -708,8 +697,8 @@ Extra for experts
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./day_1_overview.html" class="pagination-link" aria-label="Day One">
-        <span class="nav-page-text">Day One</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./episode_1.html" class="pagination-link" aria-label="Sequence Quality - FastQC, MultiQC and Cutadapt">
+        <span class="nav-page-text">Sequence Quality - FastQC, MultiQC and Cutadapt</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
