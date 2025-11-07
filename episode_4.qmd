@@ -5,9 +5,16 @@ code-overflow: wrap
 
 ![](theme_images/r_logos.png)
 
-Are those two groups *significantly different* from one another is a challenging question to answer. We can start by specifically asking our question as a statistical question: Are the differences we *observe* between the two groups **greater than the differences** we would *expect* to see by chance?
+## Statistical approach
 
-## T-tests and p-values
+In order to identify which genes are differentially expressed between two groups (in this case, we have 3 samples that are in the wild type group and 3 samples in the mutant group), when need to test if the two groups are *significantly different* from one another, which can be a challenging question to answer. We can start by specifically asking our question as a statistical question: Are the differences we *observe* between the two groups **greater than the differences** we would *expect* to see by chance?
+
+In the interest of time, in this workshop we will not get into T-tests, P-values and types of errors. You can read more about that here:
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Statistics 📊
+
+### T-tests and p-values
 
 The statistical approach to this question is to begin with the null hypothesis (that there is no difference between the two groups) and test whether or not you can reject the null.
 
@@ -53,6 +60,15 @@ Many biological experiments struggle with getting enough samples for statistical
 
 Since this issue is caused by an artificially low standard error due to low sample numbers, a number of methods have proposed artificially increasing the standard error in some way. One way to implement this is through Shrinkage Estimation, which involves using Empirical Bayes methods to adjust individual test statistics based on the overall distribution of variances. During shrinkage estimation, small standard errors are made larger while large standard errors are made smaller.
 
+:::
+
+**TL;DR:**     
+
+- The "standard" **P-value of 0.05 is not sufficient** -- 5% is too many genes that will be false positives (i.e., genes that look like they are DE, but they are not).  
+- We need to **use a correction - usually FDR**, also called Benjamini and Hochberg correction, but if you want to be more strict use FWER.  
+- We must **correct for heteroskedasticity**, i.e., cases where variance is dependent on the mean.  
+
+
 ## Identifying differentially expressed genes using LIMMA
 
 Limma involves data transformation and log scales to account for the data being in a non-normal distribution.
@@ -62,6 +78,8 @@ Limma will create one of the special objects mentioned earlier in this workshop 
 Load the libraries required for running limma, create a dge object where we specify counts (here you specify the matrix that contains your counts, in our case our object is already called counts). Then calculate normalisation factors, which will be used to adjust for library size differences, and calculate the log CPM. logCPM is, for each gene, how many counts there were per million reads. Because we are taking the log of this value, we will use the prior.counts=3 argument to add 3 to all read counts. This prevents any errors due to attempting to take the log of 0.
 
 ```{r}
+#| message: false
+
 # BiocManager::install("limma")
 # BiocManager::install("edgeR")
 # BiocManager::install("DESeq2")
@@ -69,11 +87,14 @@ Load the libraries required for running limma, create a dge object where we spec
 library(limma)
 library(edgeR)
 library(dplyr)
+```
+
+```{r}
 load("counts.RData")
 
-dge = DGEList(counts=counts)
-dge = calcNormFactors(dge)
-logCPM = cpm(dge, log=TRUE, prior.count=3)
+dge <- DGEList(counts=counts)
+dge <- calcNormFactors(dge)
+logCPM <- cpm(dge, log=TRUE, prior.count=1)
 
 head(logCPM, 3)
 ```
@@ -83,9 +104,9 @@ head(logCPM, 3)
 We use the design matrix to specify our different groups. Initially we will just look at a simple design, where we will specify wt and mutant. However, you can also include other information *e.g.,* if your two sample groups were comprised of male and females and you had reason to suspect there might be sex-dependent factors involved.
 
 ```{r}
-conds = c("WT","WT","WT","MT","MT","MT")
+conds <- c("WT","WT","WT","MT","MT","MT")
 
-design = model.matrix(~conds)
+design <- model.matrix(~conds)
 
 design
 ```
@@ -97,7 +118,7 @@ Limma has a function called voom which we can use to address heteroskedasticity 
 Create an object, v, by calling the voom function on the Digital Gene Expression (dge) object. The v object will be used in later analyses. We will add information about our experimental setup by specifying the design object, and we will also call `plot = TRUE` to generate a plot showing the heteroskedasticity.
 
 ```{r}
-v = voom(dge, design, plot = TRUE)
+v <- voom(dge, design, plot = TRUE)
 ```
 
 This plot highlights an earlier point about heteroskedasticity. For genes with low expression, the variance (here the square root of the standard deviation) is highly variable. Because the variance is dependent on the mean, we describe this data as heteroskedastic. Our v (voom) object contains information relating to the curve line (red) and makes an adjustment factor, so that the data will have a uniform relationship between the mean and variance.
@@ -126,31 +147,35 @@ We can see that voom has not removed the differences between our sample groups.
 
 What if we wanted to remove these differences? Remember, we (probably) cannot be certain as to whether these differences are biological or technical. In cases like this it can be good to run your analysis multiple ways - first without removing the differences, and then after removing the differences. If a decision like this causes your results to change drastically then you need to be aware of the impact your choices are having so that you can make an informed decision about how to investigate further.
 
-We have included a supplementary page on quantile normalisation, which is one method you can use to remove differences between sample groups. Note that quantile normalisation is a drastic intervention and should not be undertaken without a real need.
+
 
 ### Detecting differentially expressed genes
 
 Now that we have reached this point in the analysis, identifying differentially expressed genes is relatively simple in terms of the code we run. We will use the `lmFit()` command to fit a linear model for every gene using our v (voom) object and the design matrix, then use the `eBayes()` function on the linear model to perform Empirical Bayes shrinkage estimation and return moderated test statistics.
 
 ```{r}
-fit = lmFit(v, design)
+fit <- lmFit(v, design)
 
-fit = (eBayes(fit))
+fit <- (eBayes(fit))
 ```
 
 The fit object is complex to look at. We will use the topTable function to retrieve the useful information (gene name, logFC, adjusted p values), and then filter for significant genes only. We will also save the topTable object (tt) for use in the next episode.
 
 ```{r}
-tt = topTable(fit, coef=ncol(design), n=nrow(counts))
+tt <- topTable(fit, coef=ncol(design), n=nrow(counts))
 
 head(tt)
 
 sum(tt$adj.P.Val < 0.05)
-# 5140 genes with an adjusted p-value less than 0.05. 
+```
+5140 genes with an adjusted p-value less than 0.05. 
 
+```{r}
 sum(tt$adj.P.Val < 0.01)
-# 4566 genes with an adjusted p-value less than 0.01.
+```
+4566 genes with an adjusted p-value less than 0.01.
 
+```{r}
 save(tt, file="tt.RData")
 ```
 
@@ -263,7 +288,7 @@ interactive_plot
 Let's make an object to store all the information for our list of significantly differentially expressed genes. We will use a threshold of an adjusted p-value \< 0.05 and a logFC \> 1. We will return to this object later, but for now we will move on and identify differentially expressed genes using a different method.
 
 ```{r}
-sigGenesLimma = which(tt$adj.P.Val <= 0.05 & (abs(tt$logFC) > log2(2)))
+sigGenesLimma <- which(tt$adj.P.Val <= 0.05 & (abs(tt$logFC) > log2(2)))
 length(sigGenesLimma)
 # 1891
 
@@ -286,7 +311,7 @@ library(DESeq2)
 ```
 
 ```{r}
-dds = DESeqDataSetFromMatrix(countData = as.matrix(counts), 
+dds <- DESeqDataSetFromMatrix(countData = as.matrix(counts), 
                               colData = data.frame(conds=factor(conds)), 
                               design = formula(~conds))
 
@@ -296,21 +321,21 @@ counts(dds) %>% head()
 Now fit the DESeq2 generalised linear model to the data.
 
 ```{r}
-dds = DESeq(dds)
+dds <- DESeq(dds)
 ```
 
 Note the outputs from running this function. What are these outputs?
 
--   Estimating size factors: assesses library size and calculates factors to adjust for differences between samples. This also adjusts for compositional differences (*e.g.,* if gene X in sample 1 takes up a very large proportion of all available reads, other genes will have correspondingly fewer genes. If this effect is not uniform across samples, it can be corrected for during this stage).
+-   **Estimating size factors:** assesses library size and calculates factors to adjust for differences between samples. This also adjusts for compositional differences (*e.g.,* if gene X in sample 1 takes up a very large proportion of all available reads, other genes will have correspondingly fewer genes. If this effect is not uniform across samples, it can be corrected for during this stage).
 
--   Dispersion: adjusting for heteroskedasticity. DESeq2 makes use of variability estimates from not just one gene, but from all genes to make estimates about overall levels of variance. By bringing in (or "borrowing") information from other genes, DESeq2 compensates for a small number of samples (which can lead to artificially small variance estimates otherwise).
+-   **Dispersion:** adjusting for heteroskedasticity. DESeq2 makes use of variability estimates from not just one gene, but from all genes to make estimates about overall levels of variance. By bringing in (or "borrowing") information from other genes, DESeq2 compensates for a small number of samples (which can lead to artificially small variance estimates otherwise).
 
--   Fitting model and testing: fitting the GLM and identifying differentially expressed genes.
+-   **Fitting model and testing:** fitting the GLM and identifying differentially expressed genes.
 
 We will now create a new object, res, to store the results in. We can access those results using either the head function or the summary function, which will give us slightly different information - both are valid and useful ways of familiarising yourself with the data.
 
 ```{r}
-res = DESeq2::results(dds)
+res <- DESeq2::results(dds)
 
 res %>% head()
 

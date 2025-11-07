@@ -215,9 +215,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#alignment-on-the-genome" id="toc-alignment-on-the-genome" class="nav-link" data-scroll-target="#alignment-on-the-genome">Alignment on the genome</a></li>
   <li><a href="#converting-sam-to-bam" id="toc-converting-sam-to-bam" class="nav-link" data-scroll-target="#converting-sam-to-bam">Converting SAM to BAM</a></li>
   <li><a href="#mapping-statistics" id="toc-mapping-statistics" class="nav-link" data-scroll-target="#mapping-statistics">Mapping statistics</a></li>
-  <li><a href="#multiqc" id="toc-multiqc" class="nav-link" data-scroll-target="#multiqc">MultiQC</a></li>
+  <li><a href="#optional-update-multiqc" id="toc-optional-update-multiqc" class="nav-link" data-scroll-target="#optional-update-multiqc">Optional: Update MultiQC</a></li>
   </ul></li>
-  <li><a href="#read-summarisation" id="toc-read-summarisation" class="nav-link" data-scroll-target="#read-summarisation">Read summarisation</a></li>
+  <li><a href="#read-summarisation" id="toc-read-summarisation" class="nav-link" data-scroll-target="#read-summarisation">Read summarisation</a>
+  <ul class="collapse">
+  <li><a href="#optional-update-multiqc-1" id="toc-optional-update-multiqc-1" class="nav-link" data-scroll-target="#optional-update-multiqc-1">Optional: Update MultiQC</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -257,17 +260,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="preparation-of-the-genome" class="level3">
 <h3 class="anchored" data-anchor-id="preparation-of-the-genome">Preparation of the genome</h3>
 <p>When carrying out alignment, the first requirement is a genome which has been indexed. Indexing is a process to organise the genome so that our alignment algorithms can match reads to the genome easily, without having to scan the entire genome.</p>
-<p>Navigate to the Genome directory and view the contents. You should see two files, a .gtf and a .fa file. We will use the .gtf file towards the end of this episode.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Genome</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Navigate to the <code style="color:black">Genome</code> directory and view the contents using <code>ls</code>. You should see two files, a .gtf and a .fa file. We will use the .gtf file towards the end of this episode.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Genome </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The .gtf file (General Transfer Format) contains information about the genome, such as gene names <em>etc.,</em> all stored in a one-line-per-feature format, while the .fa (FASTA) file contains sequence.</p>
 <p>We will now use hisat2 to index the genome using the <code>hisat2-build</code> command. We will specify the number of threads (<code>-p 4</code>), and specify the input file (<code>-f</code> for FASTA file type).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># index file:</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hisat2-build</span> <span class="at">-p</span> 4 <span class="at">-f</span> Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa Saccharomyces_cerevisiae.R64-1-1.dna.toplevel</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We can now see many new .ht2 files, which make up the indexed version of the genome.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hisat2-build</span> <span class="at">-p</span> 4 <span class="at">-f</span> Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa Saccharomyces_cerevisiae.R64-1-1.dna.toplevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The last bit of this code <code>Saccharomyces_cerevisiae.R64-1-1.dna.toplevel</code> is the prefix for the output .ht2 files. You can name them whatever you like, but its a good idea to use a name that indicates which genome version they came from (as we have done here).</p>
+<p>Run <code>ls</code>, and we can now see many new .ht2 files, which make up the indexed version of the genome.</p>
 </section>
 <section id="alignment-on-the-genome" class="level3">
 <h3 class="anchored" data-anchor-id="alignment-on-the-genome">Alignment on the genome</h3>
@@ -278,10 +277,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Where the indexes and genome are stored.</p></li>
 <li><p>Where the mapping files will be stored.</p></li>
 </ul>
-<p>Once we have that information we are ready to align our sequences. First, navigate to the RNA_seq directory, and run <code>hisat2</code> on the first sample. We will use the <code>-x</code> flag to specify the basename of the index, the <code>-U</code> flag to specify the comma-separated list of files containing unpaired reads to be aligned, and the <code>-S</code> flag to write SAM alignment output files.</p>
+<p>Once we have that information we are ready to align our sequences. Navigate to the <code style="color:black">RNA_seq</code> directory, make a new dir called <code style="color:black">Mapping</code>, then navigate to the <code style="color:black">Trimmed</code> dir and run <code>hisat2</code> as a loop to process all samples at once. We will use the <code>-x</code> flag to specify the basename of the index, the <code>-U</code> flag to specify the comma-separated list of files containing unpaired reads to be aligned, and the <code>-S</code> flag to write SAM alignment output files.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hisat2</span> <span class="at">-x</span> Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel <span class="at">-U</span> Raw/SRR014335-chr1.fastq <span class="at">-S</span> SRR014335.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> Mapping</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Trimmed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .trimmed.fastq<span class="va">)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">hisat2</span> <span class="at">-p</span> 4 <span class="at">-x</span> ../Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel <span class="at">-U</span> <span class="va">$filename</span> <span class="at">-S</span> ../Mapping/<span class="va">${base}</span>.sam <span class="at">--summary-file</span> ../Mapping/<span class="va">${base}</span>_summary.txt</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Check the output directory (Mapping) and see the different files that have been produced. You should see both .sam and _summary.txt files for each sample.</p>
+<p>Let’s look at the SAM file format.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> SRR014335-chr1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Use <kbd>q</kbd> to quit out of the window when you are done.</p>
+<p>The file begins with an optional header which is used to include human-readable metadata such as the source of the data, reference sequence, method of alignment <em>etc.,</em>. Following the header is the alignment section. Each line contains information corresponding to the alignment of a single read. Each alignment line has 11 mandatory fields for essential mapping information and a variable number of other fields for aligner-specific information.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Run on one sample at a time:
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You can run hisat2 to align a single sample at a time using this example:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hisat2</span> <span class="at">-x</span> Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel <span class="at">-U</span> Raw/SRR014335-chr1.fastq <span class="at">-S</span> SRR014335.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Output should look something like this:</p>
 <pre><code>125090 reads; of these:
 
@@ -294,53 +317,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     20991 (16.78%) aligned &gt;1 times
 
 87.92% overall alignment rate</code></pre>
-<p>Now that we have confirmed this code works for our first sample, we will use a loop to align the rest of the samples. We will make a new directory called Mapping, which we will use to store all of our mapping output files. Then navigate to the Trimmed directory and execute the for loop to align all samples.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> Mapping</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Trimmed</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .trimmed.fastq<span class="va">)</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">hisat2</span> <span class="at">-p</span> 4 <span class="at">-x</span> ../Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel <span class="at">-U</span> <span class="va">$filename</span> <span class="at">-S</span> ../Mapping/<span class="va">${base}</span>.sam <span class="at">--summary-file</span> ../Mapping/<span class="va">${base}</span>_summary.txt</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Check the output directory (Mapping) and see the different files that have been produced. You should see both .sam and _summary.txt files for each sample.</p>
-<p>Let’s look at the SAM file format.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> SRR014335-chr1.sam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The file begins with an optional header which is used to include human-readable metadata such as the source of the data, reference sequence, method of alignment <em>etc.,</em>. Following the header is the alignment section. Each line contains information corresponding to the alignment of a single read. Each alignment line has 11 mandatory fields for essential mapping information and a variable number of other fields for aligner-specific information.</p>
+<p>It can be a good idea to confirm the code works for one sample first, before using a loop to align the rest of the samples.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="converting-sam-to-bam" class="level3">
 <h3 class="anchored" data-anchor-id="converting-sam-to-bam">Converting SAM to BAM</h3>
 <p>SAM files are tab-delimited text files containing information for each individual read and its alignment to the genome. SAM files are large, so the first thing we do with them is convert them to BAM files: compressed, binary versions of the file which reduce time and can themselves be indexed for efficiency when we interact with them.</p>
-<p>We will convert the SAM file to the BAM format using the samtools program with the view command. Use the <code>-S</code> flag to specify the input is a SAM file, and the <code>-b</code> flag to specify BAM as the output.</p>
+<p>Navigate to the Mapping dir:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Mapping</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We will convert the SAM file to the BAM format using the samtools program with the view command, as a loop. Use the <code>-S</code> flag to specify the input is a SAM file, and the <code>-b</code> flag to specify BAM as the output.</p>
 <p>Note that you will see a warning “fail to read the header from…”, this is normal.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.sam</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .sam<span class="va">)</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-S</span> <span class="at">-b</span> <span class="va">${filename}</span> <span class="at">-o</span> <span class="va">${base}</span>.bam</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Next we will sort the BAM files, which will mean our future steps are more efficient. From the samtools program we will use the sort command, with the <code>-o</code> flag to specify where the output file should go.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.bam</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .bam<span class="va">)</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-o</span> <span class="va">${base}</span>_sorted.bam <span class="va">${filename}</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.sam</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .sam<span class="va">)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-S</span> <span class="at">-b</span> <span class="va">${filename}</span> <span class="at">-o</span> <span class="va">${base}</span>.bam</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Next, we will sort the BAM files, which will mean our future steps are more efficient. From the samtools program we will use the sort command, with the <code>-o</code> flag to specify where the output file should go.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.bam</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .bam<span class="va">)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-o</span> <span class="va">${base}</span>_sorted.bam <span class="va">${filename}</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="mapping-statistics" class="level3">
 <h3 class="anchored" data-anchor-id="mapping-statistics">Mapping statistics</h3>
 <p>Using the sorted BAM file, you can now easily calculate some basic mapping statistics using the samtools flagstat command.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> flagstat SRR014335-chr1_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> flagstat SRR014335-chr1_sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Basic statistics shown by flagstat will be slightly different from those in the summary file generated by HISAT2 due to different “totals” that are used for comparisons. <code>flagstat</code> compares the number of alignments while HISAT2 compares the number of reads mapped. This is because reads can be mapped/aligned to more than one reference location, and these reads have a “primary” and “secondary” alignment (see section 1.2 of the <a href="https://github.com/samtools/hts-specs/blob/master/SAMv1.pdf">SAM specifications</a>). For example, the percent overall alignment in the HISAT2 summary will be equivalent to the percent primary mapped evaluated by flagstat. To get the number of reads that aligned 0 times (summary file), the equivalent statistic from flagstat would be subtracting the number of mapped reads from the number of total alignments.</p>
 </section>
-<section id="multiqc" class="level3">
-<h3 class="anchored" data-anchor-id="multiqc">MultiQC</h3>
+<section id="optional-update-multiqc" class="level3">
+<h3 class="anchored" data-anchor-id="optional-update-multiqc">Optional: Update MultiQC</h3>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructions here ➡️
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>HISAT2 output data can be incorporated into the MultiQC report. Copy the summary files generated by HISAT2 into the MultiQC directory and re-run multiqc.</p>
 <p>Navigate to the updated report and view it in your browser.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/MultiQC</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ../Mapping/<span class="pp">*</span>summary<span class="pp">*</span> ./</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/MultiQC</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ../Mapping/<span class="pp">*</span>summary<span class="pp">*</span> ./</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/MQC_hisat2.png" class="img-fluid figure-img"></p>
@@ -348,28 +373,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>You might notice that the report labels the summary files as “Bowtie2”. This is because the outputs are identical to those generated by Bowtie2, and MultiQC recognises them as Bowtie2.</p>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="read-summarisation" class="level2">
 <h2 class="anchored" data-anchor-id="read-summarisation">Read summarisation</h2>
 <p>Sequencing reads often need to be assigned to genomic features of interest after they are mapped to the reference genome. This process is often called read summarisation or read quantification. Read summarisation is required by a number of downstream analyses such as gene expression analysis and histone modification analysis. The output of read summarisation is a count table, in which the number of reads assigned to each feature in each library is recorded. In our case each feature is an exon. To carry out counting we will use the featureCounts tool from the Subread package.</p>
-<p>Navigate to the RNA_seq directory, create a new directory called Counts and <code>cd</code> into that directory. From there run the <code>featureCounts</code> command which will require five different flags. We will use the <code>-a</code> flag to specify the annotation file, in this case the .gtf file we noticed earlier. The <code>-o</code> flag names the output file (which we will call <code>yeast_counts.txt</code>), while the <code>-T</code> flag specifies the number of threads/CPUs used for mapping. The <code>-t</code> flag is used to control the feature type in the GTF annotation file, we will use exon (which is also the default). Finally, the <code>-g</code> flag specifies the attribute type in the GTF file. We will use the <code>gene_id</code> option (again, the default).</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> Counts</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> Counts</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">featureCounts</span> <span class="at">-a</span> ../Genome/Saccharomyces_cerevisiae.R64-1-1.99.gtf <span class="at">-o</span> ./yeast_counts.txt <span class="at">-T</span> 2 <span class="at">-t</span> exon <span class="at">-g</span> gene_id ../Mapping/<span class="pp">*</span>sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Update the MultiQC report by copying over the output data in Counts.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/MultiQC</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ../Counts/<span class="pp">*</span> .</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Navigate to the <code style="color:black">RNA_seq</code> directory, create a new directory called <code style="color:black">Counts</code> and <code>cd</code> into that directory. From there run the <code>featureCounts</code> command which will require five different flags. We will use the <code>-a</code> flag to specify the annotation file, in this case the .gtf file we noticed earlier. The <code>-o</code> flag names the output file (which we will call <code>yeast_counts.txt</code>), while the <code>-T</code> flag specifies the number of threads/CPUs used for mapping. The <code>-t</code> flag is used to control the feature type in the GTF annotation file, we will use exon (which is also the default). Finally, the <code>-g</code> flag specifies the attribute type in the GTF file. We will use the <code>gene_id</code> option (again, the default).</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> Counts</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> Counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">featureCounts</span> <span class="at">-a</span> ../Genome/Saccharomyces_cerevisiae.R64-1-1.99.gtf <span class="at">-o</span> ./yeast_counts.txt <span class="at">-T</span> 2 <span class="at">-t</span> exon <span class="at">-g</span> gene_id ../Mapping/<span class="pp">*</span>sorted.bam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We have now generated counts! We can now take these through to the next stage of our analysis: preparing to identify differentially expressed genes.</p>
+<section id="optional-update-multiqc-1" class="level3">
+<h3 class="anchored" data-anchor-id="optional-update-multiqc-1">Optional: Update MultiQC</h3>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructions here ➡️
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Update the MultiQC report by copying over the output data in Counts.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/MultiQC</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ../Counts/<span class="pp">*</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Run multiqc again and look for the newly generated report:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -21,26 +21,24 @@ In today's workflow we will demonstrate genome alignment and counting, and will 
 
 When carrying out alignment, the first requirement is a genome which has been indexed. Indexing is a process to organise the genome so that our alignment algorithms can match reads to the genome easily, without having to scan the entire genome.
 
-Navigate to the Genome directory and view the contents. You should see two files, a .gtf and a .fa file. We will use the .gtf file towards the end of this episode. 
+Navigate to the `Genome`{style="color:black"} directory and view the contents using `ls`. You should see two files, a .gtf and a .fa file. We will use the .gtf file towards the end of this episode. 
 
 ```bash
-cd ~/RNA_seq/Genome
-
-ls 
+cd ~/RNA_seq/Genome 
 ```
+
 
 The .gtf file (General Transfer Format) contains information about the genome, such as gene names *etc.,* all stored in a one-line-per-feature format, while the .fa (FASTA) file contains sequence.
 
 We will now use hisat2 to index the genome using the `hisat2-build` command. We will specify the number of threads (`-p 4`), and specify the input file (`-f` for FASTA file type).
 
 ```bash
-# index file:
 hisat2-build -p 4 -f Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa Saccharomyces_cerevisiae.R64-1-1.dna.toplevel
-
-ls
 ```
 
-We can now see many new .ht2 files, which make up the indexed version of the genome.
+The last bit of this code `Saccharomyces_cerevisiae.R64-1-1.dna.toplevel` is the prefix for the output .ht2 files. You can name them whatever you like, but its a good idea to use a name that indicates which genome version they came from (as we have done here).
+
+Run `ls`, and we can now see many new .ht2 files, which make up the indexed version of the genome.
 
 ### Alignment on the genome
 
@@ -54,11 +52,41 @@ Now that we have an indexed genome, we can align our sequences. To do this we wi
 
 -   Where the mapping files will be stored.
 
-Once we have that information we are ready to align our sequences. First, navigate to the RNA_seq directory, and run `hisat2` on the first sample. We will use the `-x` flag to specify the basename of the index, the `-U` flag to specify the comma-separated list of files containing unpaired reads to be aligned, and the `-S` flag to write SAM alignment output files. 
+Once we have that information we are ready to align our sequences. Navigate to the `RNA_seq`{style="color:black"} directory, make a new dir called `Mapping`{style="color:black"}, then navigate to the `Trimmed`{style="color:black"} dir and run `hisat2` as a loop to process all samples at once. We will use the `-x` flag to specify the basename of the index, the `-U` flag to specify the comma-separated list of files containing unpaired reads to be aligned, and the `-S` flag to write SAM alignment output files. 
 
 ```bash
 cd ~/RNA_seq
+mkdir Mapping
+```
 
+```bash
+cd ~/RNA_seq/Trimmed
+```
+
+```bash
+for filename in *
+do
+base=$(basename ${filename} .trimmed.fastq)
+hisat2 -p 4 -x ../Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel -U $filename -S ../Mapping/${base}.sam --summary-file ../Mapping/${base}_summary.txt
+done
+```
+
+Check the output directory (Mapping) and see the different files that have been produced. You should see both .sam and _summary.txt files for each sample. 
+
+Let's look at the SAM file format.
+```bash
+less SRR014335-chr1.sam
+```
+Use <KBD>q</KBD> to quit out of the window when you are done. 
+
+The file begins with an optional header which is used to include human-readable metadata such as the source of the data, reference sequence, method of alignment *etc.,*. Following the header is the alignment section. Each line contains information corresponding to the alignment of a single read. Each alignment line has 11 mandatory fields for essential mapping information and a variable number of other fields for aligner-specific information. 
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Run on one sample at a time:
+
+You can run hisat2 to align a single sample at a time using this example:
+
+```bash
 hisat2 -x Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel -U Raw/SRR014335-chr1.fastq -S SRR014335.sam
 ```
 
@@ -78,35 +106,23 @@ Output should look something like this:
 87.92% overall alignment rate
 ```
 
-Now that we have confirmed this code works for our first sample, we will use a loop to align the rest of the samples. We will make a new directory called Mapping, which we will use to store all of our mapping output files. Then navigate to the Trimmed directory and execute the for loop to align all samples. 
+It can be a good idea to confirm the code works for one sample first, before using a loop to align the rest of the samples. 
 
-```bash
-mkdir Mapping
-
-cd ~/RNA_seq/Trimmed
-
-for filename in *
-do
-base=$(basename ${filename} .trimmed.fastq)
-hisat2 -p 4 -x ../Genome/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel -U $filename -S ../Mapping/${base}.sam --summary-file ../Mapping/${base}_summary.txt
-done
-```
-
-Check the output directory (Mapping) and see the different files that have been produced. You should see both .sam and _summary.txt files for each sample. 
-
-Let's look at the SAM file format.
-```bash
-less SRR014335-chr1.sam
-```
-
-The file begins with an optional header which is used to include human-readable metadata such as the source of the data, reference sequence, method of alignment *etc.,*. Following the header is the alignment section. Each line contains information corresponding to the alignment of a single read. Each alignment line has 11 mandatory fields for essential mapping information and a variable number of other fields for aligner-specific information. 
+:::
 
 
 ### Converting SAM to BAM 
 
 SAM files are tab-delimited text files containing information for each individual read and its alignment to the genome. SAM files are large, so the first thing we do with them is convert them to BAM files: compressed, binary versions of the file which reduce time and can themselves be indexed for efficiency when we interact with them.
+ 
 
-We will convert the SAM file to the BAM format using the samtools program with the view command. Use the `-S` flag to specify the input is a SAM file, and the `-b` flag to specify BAM as the output. 
+Navigate to the Mapping dir:
+
+```bash
+cd ~/RNA_seq/Mapping
+```
+
+We will convert the SAM file to the BAM format using the samtools program with the view command, as a loop. Use the `-S` flag to specify the input is a SAM file, and the `-b` flag to specify BAM as the output.
 
 Note that you will see a warning "fail to read the header from...", this is normal.
 ```bash
@@ -115,11 +131,9 @@ do
 base=$(basename ${filename} .sam)
 samtools view -S -b ${filename} -o ${base}.bam
 done
-
-ls
 ```
 
-Next we will sort the BAM files, which will mean our future steps are more efficient. From the samtools program we will use the sort command, with the `-o` flag to specify where the output file should go.
+Next, we will sort the BAM files, which will mean our future steps are more efficient. From the samtools program we will use the sort command, with the `-o` flag to specify where the output file should go.
 
 ```bash
 for filename in *.bam
@@ -139,8 +153,10 @@ samtools flagstat SRR014335-chr1_sorted.bam
 
 Basic statistics shown by flagstat will be slightly different from those in the summary file generated by HISAT2 due to different "totals" that are used for comparisons. `flagstat` compares the number of alignments while HISAT2 compares the number of reads mapped. This is because reads can be mapped/aligned to more than one reference location, and these reads have a "primary" and "secondary" alignment (see section 1.2 of the [SAM specifications](https://github.com/samtools/hts-specs/blob/master/SAMv1.pdf)). For example, the percent overall alignment in the HISAT2 summary will be equivalent to the percent primary mapped evaluated by flagstat. To get the number of reads that aligned 0 times (summary file), the equivalent statistic from flagstat would be subtracting the number of mapped reads from the number of total alignments.
 
-### MultiQC 
+### Optional: Update MultiQC 
 
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Instructions here ➡️
 HISAT2 output data can be incorporated into the MultiQC report. Copy the summary files generated by HISAT2 into the MultiQC directory and re-run multiqc.
 
 Navigate to the updated report and view it in your browser.
@@ -153,22 +169,32 @@ multiqc .
 
 You might notice that the report labels the summary files as "Bowtie2". This is because the outputs are identical to those generated by Bowtie2, and MultiQC recognises them as Bowtie2. 
 
+:::
+
+
 
 ## Read summarisation
 
 Sequencing reads often need to be assigned to genomic features of interest after they are mapped to the reference genome. This process is often called read summarisation or read quantification. Read summarisation is required by a number of downstream analyses such as gene expression analysis and histone modification analysis. The output of read summarisation is a count table, in which the number of reads assigned to each feature in each library is recorded. In our case each feature is an exon. To carry out counting we will use the featureCounts tool from the Subread package.
 
-Navigate to the RNA_seq directory, create a new directory called Counts and `cd` into that directory. From there run the `featureCounts` command which will require five different flags. We will use the `-a` flag to specify the annotation file, in this case the .gtf file we noticed earlier. The `-o` flag names the output file (which we will call `yeast_counts.txt`), while the `-T` flag specifies the number of threads/CPUs used for mapping. The `-t` flag is used to control the feature type in the GTF annotation file, we will use exon (which is also the default). Finally, the `-g` flag specifies the attribute type in the GTF file. We will use the `gene_id` option (again, the default). 
+Navigate to the `RNA_seq`{style="color:black"} directory, create a new directory called `Counts`{style="color:black"} and `cd` into that directory. From there run the `featureCounts` command which will require five different flags. We will use the `-a` flag to specify the annotation file, in this case the .gtf file we noticed earlier. The `-o` flag names the output file (which we will call `yeast_counts.txt`), while the `-T` flag specifies the number of threads/CPUs used for mapping. The `-t` flag is used to control the feature type in the GTF annotation file, we will use exon (which is also the default). Finally, the `-g` flag specifies the attribute type in the GTF file. We will use the `gene_id` option (again, the default). 
+
 ```bash
 cd ~/RNA_seq
-
 mkdir Counts
-
 cd Counts
+```
 
+```bash
 featureCounts -a ../Genome/Saccharomyces_cerevisiae.R64-1-1.99.gtf -o ./yeast_counts.txt -T 2 -t exon -g gene_id ../Mapping/*sorted.bam
 ```
 
+We have now generated counts! We can now take these through to the next stage of our analysis: preparing to identify differentially expressed genes. 
+
+### Optional: Update MultiQC
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Instructions here ➡️
 
 Update the MultiQC report by copying over the output data in Counts.
 
@@ -176,10 +202,12 @@ Update the MultiQC report by copying over the output data in Counts.
 cd ~/RNA_seq/MultiQC
 
 cp ../Counts/* .
+```
 
+Run multiqc again and look for the newly generated report:
+
+```bash
 multiqc .
 ```
 
-
-We have now generated counts! We can now take these through to the next stage of our analysis: preparing to identify differentially expressed genes. 
-
+:::

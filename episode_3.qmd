@@ -7,7 +7,7 @@ code-overflow: wrap
 ![](theme_images/exploratory-analysis.png){width=80% fig-align="center"}
 
 
-Exploratory analysis is will cover basic visualisations and characterisations of the data as well as any initial transformations (*e.g.,* library size) required before we move on to identifying differentially expressed genes. 
+Exploratory analysis will cover basic visualisations and characterisations of the data as well as any initial transformations (*e.g.,* library size) required before we move on to identifying differentially expressed genes. 
 
 ## What is exploratory analysis and why is it necessary?
 
@@ -21,17 +21,33 @@ From here and for the rest of the workshop, we will be working within R. Use the
 
 
 ```{r}
+#| message: false
 library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
 
-# If you are completing this workshop on the REANNZ OpenOnDemand platform, run the code below to load the file. 
-# fcData <- read.delim("~/RNA_seq/yeast_counts_all_chr.txt", comment.char="#")
+Run the code below to load the file. 
 
-## I'm loading from my own local machine, so my filepath is different:
-fcData <- read.delim("~/Library/CloudStorage/OneDrive-UniversityofOtago/GenomicsAotearoa/Github_local_repos/RNA-seq-data-analysis-workflow/data/yeast_counts_all_chr.txt", comment.char="#")
+```bash
+fcData <- read.delim("~/RNA_seq/yeast_counts_all_chr.txt", comment.char="#")
+```
 
-View(fcData)
+::: {.callout-note collapse="true" appearance="simple"}
+# Extra for experts: making this work in the background
+
+As this workshop is written in Quarto, which requires all code to work upon render, below I have actually loaded in the fcData directly from the GA GitHub. This keeps it computer agnostic--anyone anywhere can run this code and pull in the data from GitHub. In this workshop this is unnecessary--the dataset is already on the server. 
+
+```{r}
+fcData <- read.delim("https://raw.githubusercontent.com/GenomicsAotearoa/RNA-seq-data-analysis-workflow/main/data/yeast_counts_all_chr.txt", comment.char="#")
+```
+
+Now that the data is loaded in in the background, we can continue with exploring the data!
+:::
+
+Explore the data:
+```{r}
 fcData %>% head()
-
 names(fcData)
 ```
 
@@ -85,8 +101,17 @@ Because our zeros are not a massive part of the data (*i.e.,* here they are \< 1
 ## Visualising our data set
 
 ```{r}
-boxplot(as.matrix(counts) ~ col(counts), 
-        ylab = "Counts", xlab = "Samples", names = colnames(counts))
+# Convert counts data to long format for ggplot
+counts_long <- counts %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Gene") %>%
+  tidyr::pivot_longer(cols = -Gene, names_to = "Sample", values_to = "Counts")
+
+# Create boxplot with ggplot2
+ggplot(counts_long, aes(x = Sample, y = Counts)) +
+  geom_boxplot() +
+  labs(x = "Samples", y = "Counts") +
+  theme_minimal()
 ```
 
 This figure indicates we should consider logging our data (for the purpose of visualisations).
@@ -96,11 +121,17 @@ Log transform the data, adding 1 to avoid log(0) errors.
 ```{r}
 logCounts = log2(as.matrix(counts) + 1)
 
-boxplot(as.matrix(logCounts) ~ col(counts), 
-        ylab = "Counts", 
-        xlab = "Samples", 
-        names = colnames(counts), 
-        main = "Log counts of samples")
+# Convert log-transformed counts to long format for ggplot
+logCounts_long <- logCounts %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Gene") %>%
+  tidyr::pivot_longer(cols = -Gene, names_to = "Sample", values_to = "LogCounts")
+
+# Create log counts boxplot with ggplot2
+ggplot(logCounts_long, aes(x = Sample, y = LogCounts)) +
+  geom_boxplot() +
+  labs(x = "Samples", y = "Log Counts", title = "Log counts of samples") +
+  theme_minimal()
 ```
 
 
@@ -116,7 +147,6 @@ lineColour
 plot(density(logCounts[,1]), ylim=c(0,0.3), col=lineColour[1], xlab = "log Counts", main = "Density plot")
 for(i in 2:ncol(logCounts)) lines(density(logCounts[,i]), col=lineColour[i])
 ```
-
 
 
 A common question to ask at this point is, are the differences we can see between our two sample groups a true biological effect, or is this an experimental artifact? Often, we will not know the answer to this question. For now, it is enough to be aware of these differences and to keep them in mind moving forward.

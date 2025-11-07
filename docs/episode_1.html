@@ -215,15 +215,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#generating-fastqc-reports" id="toc-generating-fastqc-reports" class="nav-link" data-scroll-target="#generating-fastqc-reports">Generating FastQC reports</a></li>
   <li><a href="#viewing-the-fastqc-results" id="toc-viewing-the-fastqc-results" class="nav-link" data-scroll-target="#viewing-the-fastqc-results">Viewing the FastQC results</a></li>
   <li><a href="#fastqc-text-output" id="toc-fastqc-text-output" class="nav-link" data-scroll-target="#fastqc-text-output">FastQC text output</a></li>
+  <li><a href="#optional-multiqc---multi-sample-analysis" id="toc-optional-multiqc---multi-sample-analysis" class="nav-link" data-scroll-target="#optional-multiqc---multi-sample-analysis">Optional: MultiQC - multi-sample analysis</a></li>
   </ul></li>
-  <li><a href="#multiqc---multi-sample-analysis" id="toc-multiqc---multi-sample-analysis" class="nav-link" data-scroll-target="#multiqc---multi-sample-analysis">MultiQC - multi-sample analysis</a></li>
   <li><a href="#cleaning-reads" id="toc-cleaning-reads" class="nav-link" data-scroll-target="#cleaning-reads">Cleaning reads</a>
   <ul class="collapse">
   <li><a href="#cutadapt-adapter-trimming" id="toc-cutadapt-adapter-trimming" class="nav-link" data-scroll-target="#cutadapt-adapter-trimming">Cutadapt: Adapter trimming</a></li>
   <li><a href="#cutadapt-quality-trimming" id="toc-cutadapt-quality-trimming" class="nav-link" data-scroll-target="#cutadapt-quality-trimming">Cutadapt: Quality trimming</a></li>
   <li><a href="#cutadapt-filtering-reads" id="toc-cutadapt-filtering-reads" class="nav-link" data-scroll-target="#cutadapt-filtering-reads">Cutadapt: Filtering reads</a></li>
+  <li><a href="#optional-update-multiqc" id="toc-optional-update-multiqc" class="nav-link" data-scroll-target="#optional-update-multiqc">Optional: Update MultiQC</a></li>
   </ul></li>
-  <li><a href="#multiqc-update" id="toc-multiqc-update" class="nav-link" data-scroll-target="#multiqc-update">MultiQC update</a></li>
   </ul>
 </nav>
     </div>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If a sample has low quality scores in one or more aspects, this does not necessarily mean we need to remove this sample from our analysis. The next steps of the workflow involve performing some sequence cleaning and trimming which may increase the overall quality of the sequence. However, it is still worth performing QC initially and comparing this to the post-cleaning sequence.</p>
 <section id="generating-fastqc-reports" class="level3">
 <h3 class="anchored" data-anchor-id="generating-fastqc-reports">Generating FastQC reports</h3>
-<p>In a terminal window navigate to your RNA-seq directory. Ensure you have a sub-directory that contains your raw sequence files (name this Raw), and separate sub-directory in which to store quality control outputs (name this QC).</p>
+<p>In a terminal window navigate to your <code style="color:black">RNA-seq</code> directory. Ensure you have a sub-directory that contains your raw sequence files (name this <code style="color:black">Raw</code>), and separate sub-directory in which to store quality control outputs (name this <code style="color:black">QC</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># While in the RNA-seq directory containing the directories Raw and QC:</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fastqc</span> <span class="at">-o</span> QC/ Raw/<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The FastQC tool will generate reports on all files within the directory Raw, and output them into the QC directory. You will see an output similar to:</p>
@@ -271,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     Approx 25% complete for SRR014335-chr1.fastq
     Approx 30% complete for SRR014335-chr1.fastq
     Approx 35% complete for SRR014335-chr1.fastq</code></pre>
-<p>If we now look within the QC directory, we should see two types of files for each of our six samples. These should be called <strong>“sampleName_fastqc.html”</strong> and <strong>“sampleName_fastqc.zip”</strong>.</p>
+<p>If we now look within the QC directory, we should see two types of files for each of our six samples. These should be called <code style="color:black">sampleName_fastqc.html</code> and <code style="color:black">sampleName_fastqc.zip</code>.</p>
 </section>
 <section id="viewing-the-fastqc-results" class="level3">
 <h3 class="anchored" data-anchor-id="viewing-the-fastqc-results">Viewing the FastQC results</h3>
@@ -285,38 +285,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fastqc-text-output" class="level3">
 <h3 class="anchored" data-anchor-id="fastqc-text-output">FastQC text output</h3>
-<p>FastQC outputs text files into a zipped directory. The text files contain detailed results of the various statistical tests done during QC. We might want to examine one or more of our QC reports in more detail, and here we will concatenate the QC reports from each of the six samples into a single text file called <code>fastqc_summaries.txt</code></p>
-<p>Navigate to the QC directory containing the <code>sampleName_fastqc.zip</code> outputs for each sample. Unzip the files and use the <code>ls</code> command to see what files are created for each sample, then use the <code>less</code> command to preview the <code>summary.txt</code> file for the first sample (SRR014335-chr1_fastqc).</p>
+<p>FastQC outputs text files into a zipped directory. The text files contain detailed results of the various statistical tests done during QC. We might want to examine one or more of our QC reports in more detail, and here we will concatenate the QC reports from each of the six samples into a single text file called <code style="color:black">fastqc_summaries.txt</code></p>
+<p>Navigate to the QC directory containing the <code style="color:black">sampleName_fastqc.zip</code> outputs for each sample. Unzip the files and use the <code>ls</code> command to see what files are created for each sample, then use the <code>less</code> command to preview the <code style="color:black">summary.txt</code> file for the first sample (SRR014335-chr1_fastqc).</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.zip</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span> <span class="va">$filename</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> SRR014335-chr1_fastqc</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Should contain the files:</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fastqc_data.txt  fastqc.fo  fastqc_report.html  Icons/  Images/  summary.txt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> SRR014335-chr1_fastqc/summary.txt</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use "q" to quit out of the window when you are done. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Create a single document that contains the information from <code>summary.txt</code> from all six samples, and name that document <code>fastqc_summaries.txt</code></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="pp">*</span>/summary.txt <span class="op">&gt;</span> ~/RNA_seq/QC/fastqc_summaries.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Open the <code>fastqc_summaries.txt</code> file and search for any of the samples that have failed the QC statistical tests.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Optional: Explore files with command line
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>ls</code> to explore a dir from one sample:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> SRR014335-chr1_fastqc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Should contain the files:</p>
+<pre><code>fastqc_data.txt  fastqc.fo  fastqc_report.html  Icons/  Images/  summary.txt</code></pre>
+<p>Use <code>less</code> to view one of the summary.txt files.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> SRR014335-chr1_fastqc/summary.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Use <kbd>q</kbd> to quit out of the window when you are done.</p>
+</div>
+</div>
+</div>
+<p>Create a single document that contains the information from <code style="color:black">summary.txt</code> from all six samples, and name that document <code style="color:black">fastqc_summaries.txt</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="pp">*</span>/summary.txt <span class="op">&gt;</span> ~/RNA_seq/QC/fastqc_summaries.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Open the <code style="color:black">fastqc_summaries.txt</code> file and search for any of the samples that have failed the QC statistical tests.</p>
 </section>
-</section>
-<section id="multiqc---multi-sample-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="multiqc---multi-sample-analysis">MultiQC - multi-sample analysis</h2>
+<section id="optional-multiqc---multi-sample-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="optional-multiqc---multi-sample-analysis">Optional: MultiQC - multi-sample analysis</h3>
 <p>The MultiQC application will create a report based on all documents in a given directory. MultiQC will take inputs from many different software applications, including fastQC. The report is a concise, clear document that can be used to track samples as they progress through various stages of the analysis.</p>
 <p>To generate the MultiQC report first navigate to the RNA_seq directory and create a new output directory called MultiQC, then copy all target files to that directory (initially target files will be the FastQC documents generated above). Finally, execute the multiqc command.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> MultiQC</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> MultiQC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> ../QC/<span class="pp">*</span> ./</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-F</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ls -F will show multiqc_data/ and multiqc_report.html</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> MultiQC</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> MultiQC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> ../QC/<span class="pp">*</span> ./</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-F</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>which will show:</p>
+<pre><code>multiqc_data/ multiqc_report.html</code></pre>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/MQC1.png" class="img-fluid figure-img"></p>
@@ -324,6 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>After each step in the analysis (<em>e.g.,</em> read cleaning, adaptor trimming) we will copy over new reports and summaries to the MultiQC directory and re-run the multiqc command. New information will be appended to the MultiQC report at each stage.</p>
+</section>
 </section>
 <section id="cleaning-reads" class="level2">
 <h2 class="anchored" data-anchor-id="cleaning-reads">Cleaning reads</h2>
@@ -338,37 +351,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="cutadapt-quality-trimming">Cutadapt: Quality trimming</h3>
 <p><a href="https://cutadapt.readthedocs.io/en/stable/guide.html#quality-trimming">Quality trimming</a> is the process of removing low-quality bases from the end of reads. Usually during sequencing it is the end (or start) of the read which has the lowest quality. By trimming only the low-quality ends of the reads, we improve our overall sequence quality without sacrificing too much data.</p>
 <p>Here we will use Cutadapt and the <code>-q</code> flag to specify the lower threshold of quality we are willing to accept at the 3’ end of our reads. Two things to note are that a) we can apply the threshold cutoff to both the 5’ and the 3’ end, but for Illumina sequencing the 5’ end is usually high quality, and b) this requires our per-based quality scores to be encoded as phred quality + 33.</p>
-<p>To begin, navigate to the RNA_seq directory and create a new directory called Trimmed which we will use to store our modified files. We will then use <code>cutadapt</code> and the <code>-q</code> flag to remove bases from the 3’ end of our reads <em>if</em> they have a phred quality score below 20. Simultaneously we will use the <code>-a</code> flag to remove our adaptors (supplied as AACCGGTT).</p>
+<p>To begin, navigate to the <code style="color:black">RNA_seq</code> directory and create a new directory called <code style="color:black">Trimmed</code> which we will use to store our modified files. We will then use <code>cutadapt</code> and the <code>-q</code> flag to remove bases from the 3’ end of our reads <em>if</em> they have a phred quality score below 20. Simultaneously we will use the <code>-a</code> flag to remove our adaptors (supplied as AACCGGTT).</p>
 <p>Cutadapt will produce a trimmed file as well as a summary in the form of a log file.</p>
 <p>As a reminder, you should never modify your raw data (and should ideally have raw data backed up in a remote and secure location).</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> Trimmed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="at">-q</span> 20 <span class="at">-a</span> AACCGGTT <span class="at">-o</span> Trimmed/SRR014335-chr1_cutadapt.fastq Raw/SRR014335-chr1.fastq <span class="op">&gt;</span> Trimmed/SRR014335-chr1.log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> Trimmed/SRR014335-chr1.log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Now trim all samples in the Raw directory:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Raw</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.fastq</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .fastq<span class="va">)</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="at">-q</span> 20 <span class="at">-a</span> AACCGGTT <span class="at">-o</span> ../Trimmed/<span class="va">${base}</span>.trimmed.fastq <span class="va">${filename}</span> <span class="op">&gt;</span> ../Trimmed/<span class="va">${base}</span>.log</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> Trimmed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now trim all samples in the <code style="color:black">Raw</code> directory using a loop (output will go to <code style="color:black">Trimmed</code> dir):</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/RNA_seq/Raw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> filename <span class="kw">in</span> <span class="pp">*</span>.fastq</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${filename}</span> .fastq<span class="va">)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="at">-q</span> 20 <span class="at">-a</span> AACCGGTT <span class="at">-o</span> ../Trimmed/<span class="va">${base}</span>.trimmed.fastq <span class="va">${filename}</span> <span class="op">&gt;</span> ../Trimmed/<span class="va">${base}</span>.log</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Trim one sample at a time:
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Example to trim one sample:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="at">-q</span> 20 <span class="at">-a</span> AACCGGTT <span class="at">-o</span> Trimmed/SRR014335-chr1_cutadapt.fastq Raw/SRR014335-chr1.fastq <span class="op">&gt;</span> Trimmed/SRR014335-chr1.log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then can view the log file with less:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> Trimmed/SRR014335-chr1.log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Hint: press <kbd>q</kbd> to quit.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="cutadapt-filtering-reads" class="level3">
 <h3 class="anchored" data-anchor-id="cutadapt-filtering-reads">Cutadapt: Filtering reads</h3>
 <p>Cutadapt can also filter reads. That is, reads which meet (or more often, fail to meet) a specific criteria are either discarded or redirected to a separate output file.</p>
 <p>Examples of read filtering include using the <code>-m</code> flag to specify a minimum length. If reads are below a certain length, they will be discarded or redirected. This can be a useful way to remove reads that have a length of zero. The user guide for Cutadapt has many other ways in which you can filter reads.</p>
 </section>
-</section>
-<section id="multiqc-update" class="level2">
-<h2 class="anchored" data-anchor-id="multiqc-update">MultiQC update</h2>
+<section id="optional-update-multiqc" class="level3">
+<h3 class="anchored" data-anchor-id="optional-update-multiqc">Optional: Update MultiQC</h3>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructions here ➡️
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>We can now copy the log files from Cutadapt into our MultiQC directory and re-run the multiqc command to generate an updated report which includes our read cleaning information.</p>
 <p>Navigate to the MultiQC directory, copy over the log files from the Trimmed directory and rerun the <code>multiqc</code> command.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ../MultiQC</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ../Trimmed/<span class="pp">*</span>log .</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ../MultiQC</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ../Trimmed/<span class="pp">*</span>log .</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/MQC2.png" class="img-fluid figure-img"></p>
@@ -376,8 +416,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>We can now see the Cutadapt metrics have been added to the report.</p>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

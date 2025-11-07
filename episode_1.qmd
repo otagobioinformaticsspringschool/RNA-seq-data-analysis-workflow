@@ -20,7 +20,7 @@ If a sample has low quality scores in one or more aspects, this does not necessa
 
 ### Generating FastQC reports
 
-In a terminal window navigate to your RNA-seq directory. Ensure you have a sub-directory that contains your raw sequence files (name this Raw), and separate sub-directory in which to store quality control outputs (name this QC).
+In a terminal window navigate to your `RNA-seq`{style="color:black"} directory. Ensure you have a sub-directory that contains your raw sequence files (name this `Raw`{style="color:black"}), and separate sub-directory in which to store quality control outputs (name this `QC`{style="color:black"}).
 
 ```bash
 # While in the RNA-seq directory containing the directories Raw and QC:
@@ -40,7 +40,7 @@ The FastQC tool will generate reports on all files within the directory Raw, and
     Approx 35% complete for SRR014335-chr1.fastq
 ```
 
-If we now look within the QC directory, we should see two types of files for each of our six samples. These should be called **"sampleName_fastqc.html"** and **"sampleName_fastqc.zip"**. 
+If we now look within the QC directory, we should see two types of files for each of our six samples. These should be called `sampleName_fastqc.html`{style="color:black"} and `sampleName_fastqc.zip`{style="color:black"}. 
 
 ### Viewing the FastQC results
 
@@ -50,9 +50,9 @@ The html file outputs from FastQC can be opened in a browser for viewing. For ea
 
 ### FastQC text output
 
-FastQC outputs text files into a zipped directory. The text files contain detailed results of the various statistical tests done during QC. We might want to examine one or more of our QC reports in more detail, and here we will concatenate the QC reports from each of the six samples into a single text file called `fastqc_summaries.txt`
+FastQC outputs text files into a zipped directory. The text files contain detailed results of the various statistical tests done during QC. We might want to examine one or more of our QC reports in more detail, and here we will concatenate the QC reports from each of the six samples into a single text file called `fastqc_summaries.txt`{style="color:black"}
 
-Navigate to the QC directory containing the `sampleName_fastqc.zip` outputs for each sample. Unzip the files and use the `ls` command to see what files are created for each sample, then use the `less` command to preview the `summary.txt` file for the first sample (SRR014335-chr1_fastqc).
+Navigate to the QC directory containing the `sampleName_fastqc.zip`{style="color:black"} outputs for each sample. Unzip the files and use the `ls` command to see what files are created for each sample, then use the `less` command to preview the `summary.txt`{style="color:black"} file for the first sample (SRR014335-chr1_fastqc).
 
 ```bash
 for filename in *.zip
@@ -61,27 +61,37 @@ unzip $filename
 done
 ```
 
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Optional: Explore files with command line
+
+Use `ls` to explore a dir from one sample:
 ```bash
 ls SRR014335-chr1_fastqc
-# Should contain the files:
-# fastqc_data.txt  fastqc.fo  fastqc_report.html  Icons/  Images/  summary.txt
+```
+Should contain the files:
+```
+fastqc_data.txt  fastqc.fo  fastqc_report.html  Icons/  Images/  summary.txt
 ```
 
+Use `less` to view one of the summary.txt files. 
 ```bash
 less SRR014335-chr1_fastqc/summary.txt
-# Use "q" to quit out of the window when you are done. 
 ```
+Use <KBD>q</KBD> to quit out of the window when you are done. 
+:::
 
-Create a single document that contains the information from `summary.txt` from all six samples, and name that document `fastqc_summaries.txt`
+
+
+Create a single document that contains the information from `summary.txt`{style="color:black"} from all six samples, and name that document `fastqc_summaries.txt`{style="color:black"}
 ```bash
 cat */summary.txt > ~/RNA_seq/QC/fastqc_summaries.txt
 ```
 
-Open the `fastqc_summaries.txt` file and search for any of the samples that have failed the QC statistical tests. 
+Open the `fastqc_summaries.txt`{style="color:black"} file and search for any of the samples that have failed the QC statistical tests. 
 
 
 
-## MultiQC - multi-sample analysis
+### Optional: MultiQC - multi-sample analysis
 
 The MultiQC application will create a report based on all documents in a given directory. MultiQC will take inputs from many different software applications, including fastQC. The report is a concise, clear document that can be used to track samples as they progress through various stages of the analysis.
 
@@ -89,21 +99,22 @@ To generate the MultiQC report first navigate to the RNA_seq directory and creat
 
 ```bash
 cd ~/RNA_seq/
-
 mkdir MultiQC
-
 cd MultiQC
 ```
 
 ```bash
 cp -r ../QC/* ./
-
 multiqc .
-
 ls -F
-
-# ls -F will show multiqc_data/ and multiqc_report.html
 ```
+
+which will show:
+```
+multiqc_data/ multiqc_report.html
+```
+
+
 
 ![MultiQC report](images/MQC1.png)
 
@@ -129,7 +140,7 @@ We will perform adapter trimming simultaneously with quality trimming, done belo
 
 Here we will use Cutadapt and the `-q` flag to specify the lower threshold of quality we are willing to accept at the 3' end of our reads. Two things to note are that a) we can apply the threshold cutoff to both the 5' and the 3' end, but for Illumina sequencing the 5' end is usually high quality, and b) this requires our per-based quality scores to be encoded as phred quality + 33. 
 
-To begin, navigate to the RNA_seq directory and create a new directory called Trimmed which we will use to store our modified files. We will then use `cutadapt` and the `-q` flag to remove bases from the 3' end of our reads *if* they have a phred quality score below 20. Simultaneously we will use the `-a` flag to remove our adaptors (supplied as AACCGGTT). 
+To begin, navigate to the `RNA_seq`{style="color:black"} directory and create a new directory called `Trimmed`{style="color:black"} which we will use to store our modified files. We will then use `cutadapt` and the `-q` flag to remove bases from the 3' end of our reads *if* they have a phred quality score below 20. Simultaneously we will use the `-a` flag to remove our adaptors (supplied as AACCGGTT). 
 
 Cutadapt will produce a trimmed file as well as a summary in the form of a log file. 
 
@@ -141,17 +152,12 @@ cd ~/RNA_seq
 mkdir Trimmed
 ```
 
-```bash
-cutadapt -q 20 -a AACCGGTT -o Trimmed/SRR014335-chr1_cutadapt.fastq Raw/SRR014335-chr1.fastq > Trimmed/SRR014335-chr1.log
-```
 
-```bash
-less Trimmed/SRR014335-chr1.log
-```
-
-Now trim all samples in the Raw directory:
+Now trim all samples in the `Raw`{style="color:black"} directory using a loop (output will go to `Trimmed`{style="color:black"} dir):
 ```bash
 cd ~/RNA_seq/Raw
+```
+```bash
 for filename in *.fastq
 do 
 base=$(basename ${filename} .fastq)
@@ -159,13 +165,35 @@ cutadapt -q 20 -a AACCGGTT -o ../Trimmed/${base}.trimmed.fastq ${filename} > ../
 done
 ```
 
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Trim one sample at a time:
+
+Example to trim one sample:
+```bash
+cutadapt -q 20 -a AACCGGTT -o Trimmed/SRR014335-chr1_cutadapt.fastq Raw/SRR014335-chr1.fastq > Trimmed/SRR014335-chr1.log
+```
+
+Then can view the log file with less:
+```bash
+less Trimmed/SRR014335-chr1.log
+```
+Hint: press <KBD>q</KBD> to quit.
+
+:::
+
+
+
 ### Cutadapt: Filtering reads
 
 Cutadapt can also filter reads. That is, reads which meet (or more often, fail to meet) a specific criteria are either discarded or redirected to a separate output file. 
 
 Examples of read filtering include using the `-m` flag to specify a minimum length. If reads are below a certain length, they will be discarded or redirected. This can be a useful way to remove reads that have a length of zero. The user guide for Cutadapt has many other ways in which you can filter reads. 
 
-## MultiQC update
+
+### Optional: Update MultiQC
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+# Instructions here ➡️
 
 We can now copy the log files from Cutadapt into our MultiQC directory and re-run the multiqc command to generate an updated report which includes our read cleaning information. 
 
@@ -173,14 +201,16 @@ Navigate to the MultiQC directory, copy over the log files from the Trimmed dire
 
 ```bash
 cd ../MultiQC
-
 cp ../Trimmed/*log .
-
 multiqc .
 ```
 
 ![Updated MultiQC report](images/MQC2.png)
 
 We can now see the Cutadapt metrics have been added to the report. 
+
+:::
+
+
 
 
