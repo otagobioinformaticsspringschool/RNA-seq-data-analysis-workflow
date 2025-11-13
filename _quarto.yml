@@ -29,7 +29,7 @@ website:
     tools:
       - icon: github
         text: Github
-        href: https://github.com/GenomicsAotearoa/RNA-seq-data-analysis-workflow
+        href: https://github.com/otagobioinformaticsspringschool/RNA-seq-data-analysis-workflow
 
 format:
   html:
