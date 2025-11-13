@@ -24,10 +24,10 @@ There are different approaches to functional analysis *e.g.,*:
 
 -   **Functional class scoring (Gene Set Enrichment Analysis (GSEA))**: Rather than taking a list of differentially expressed genes (which are themselves based on thresholds and cutoffs defined by a user), GSEA takes the ranked position of all genes to see how pathways and processes are perturbed.
 
--   **Pathway topology**: Pathway topology analysis takes a higher level approach, compiling information on up- and down-regulation at the level of the pathway rather than the level of the gene.
+-   **Pathway topology**: Pathway topology analysis takes a higher level approach, compiling information on up- and down-regulation at the level of the pathway rather than the level of the gene (e.g., [KEGG](https://www.genome.jp/kegg/pathway.html), [Reactome](https://reactome.org/), [PANTHER](https://pantherdb.org/), [SPIA](https://bioconductor.org/packages/release/bioc/html/SPIA.html))
 
-Today we will cover Over-representation analysis and functional class scoring.
-Links to pathway topology workflows are provided.
+Today we will show an example of using GOseq -- an over-representation analysis method specifically for RNAseq data. 
+
 
 ## Annotation
 
@@ -37,6 +37,10 @@ This first requires that our genes are annotated - we must be able to associate 
 There are now many databases that maintain information and annotation on genes, including proposed and confirmed functions, pathways, processes *etc.,*.
 Annotation and databases is an entire area in itself, and not something we can cover today.
 For now, we will retrieve annotation information from different sources and attach the annotation to genes.
+
+We will be using Gene Ontology (GO) annotations to functionally classify our genes. GO terms can be divided into three aspects -- Molecular Function (MF), Cellular Component (CC), and Biological Process (BP). Read more about [GO terms here.](https://geneontology.org/docs/ontology-documentation/)
+
+
 
 ## Over-representation Analysis
 
@@ -167,15 +171,23 @@ table(genes)
 This is a useful reminder about the conditions of this experiment: of the 7,127 genes in the tt object, 5,140 are differentially expressed.
 Most experiments will not have this level of differential expression.
 
-IF you did want to include the logFC cutoff, you can use the code below.
+::: {.callout-tip collapse="true"}
+# How to include the logFC cutoff too:
+
+If you did want to include the logFC cutoff, you can use the code below.
 This gives a more modest 1,891 differentially expressed genes.
-For the purposes of today's workflow, we will continue with the larger gene list.
+
 
 ```{r}
 genes2 <- ifelse(tt$adj.P.Val <= 0.05 & (abs(tt$logFC) > log2(2)), 1, 0)
 names(genes2) <- rownames(tt)
 table(genes2)
 ```
+
+For the purposes of today's workflow, we will continue with the larger gene list.
+
+:::
+
 
 #### Methodology
 
@@ -219,6 +231,7 @@ We can now carry out our Fishers Exact test using the pwf value instead of the r
 We will use the `goseq()` function to perform this test, and output the over-representation data into an object.
 
 ```{r}
+#| message: false
 
 # BiocManager::install("org.Sc.sgd.db")
 # BiocManager::install("AnnotationDbi")
@@ -275,21 +288,28 @@ GOTERM[[GO.wall.sig$category[1]]]
 
 GOSeq is a powerful tool that corrects for an important bias in RNA-seq data. There are other options when it comes to over-representation analysis, and functional analysis in general. Some of these tools might help with generating better visualisations, or claim to have more up-to-date databases. 
 
+Here we showed an example of how to run GOseq using annotation data pulled from the AnnotationDbi package and the yeast specific Bioconductor organism annotation packaage org.Sc.sgd.db. But what if you don't have a supported organism, can you still run GOseq? 
 
+Yes you can!
+
+You will need:  
+- A file of your gene IDs in one column, matched to their gene lengths in another column.  
+- A file of your gene IDs in one column, matched to their GO terms in another column.  
+- A list of your DE genes IDs.  
+
+You can generate these yourself, pulling information from the genome, or *de novo* assembled transcriptome data, and if necessary, performing GO annotation manually using software such as BLAST2GO and PFAM2GO or InterPro. 
 
 
 
 ## Other functional analyses 
-**FIX THIS SECTION**
 
 ### Gene set enrichment analysis (GSEA)
 
 GSEA takes an alternative approach to the previous section in that it does not take as input a list of differentially expressed genes. GSEA moves away from the binary "differentially expressed or not" approach and considers the state, or position, of all genes in the list. 
 
-This approach has the advantage of not relying on our somewhat arbitrary cutoff thresholds (*e.g.,* a gene with a p-value 0.0501 probably should still contribute to what we think is happening to a pathway). 
+This approach has the advantage of not relying on our somewhat arbitrary cutoff thresholds (*e.g.,* a gene with a p-value 0.0501 probably should still contribute to what we think is happening to a pathway). Simply put, GOseq is threshold-based and GSEA is ranking-based.
 
-**FIX THIS SECTION**
-In particular we strongly recommend The Carpentries workshop [RNA-seq analysis with Bioconductor](https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#ora-with-clusterprofiler) section on GSEA. 
+In particular we recommend The Carpentries incubator workshop RNA-seq analysis with Bioconductor [Gene set enrichment analysis section.](https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html) 
 
 
 ### ClusterProfiler
@@ -297,13 +317,18 @@ In particular we strongly recommend The Carpentries workshop [RNA-seq analysis w
 ClusterProfiler is a widely used package with the support to create *excellent* figures ([check these out](https://carpentries-incubator.github.io/bioc-rnaseq/instructor/07-gene-set-analysis.html#visualization)). 
 
 
-### GSEA, clusterProfiler and length correction
+#### Length correction
 
 GSEA and clusterProfiler do not implement a gene length correction. Does this invalidate them as options? We argue that it does not. Even without length correction, GSEA is implementing a powerful and logical approach and the visualisations made with clusterProfiler should not be under-valued. 
 
-In any situation where there are multiple tools, methods, or decision points (*e.g.,* thresholds, removal of outliers *etc.,*) it is recommended that you complete the analyses and compare the outcomes. It is possible to run GOSeq *without* the length correction implemention (shown below) and compare the over-represented categories. If the difference is large, then you should be cautious when interpreting GSEA results or the output of clusterProfiler. 
+In any situation where there are multiple tools, methods, or decision points (*e.g.,* thresholds, removal of outliers *etc.,*) it is recommended that you complete the analyses and compare the outcomes. 
+
+It is possible to run GOSeq *without* the length correction implemention (shown below) and compare the over-represented categories. If the difference is large, then you should be cautious when interpreting GSEA results or the output of clusterProfiler. 
 
 ```{r}
 GO.nobias=goseq(pwf, "sacCer1", "ensGene", method="Hypergeometric")
+
+GO.nobias %>% head()
 ```
+
 
