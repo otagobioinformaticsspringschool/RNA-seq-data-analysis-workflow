@@ -171,7 +171,7 @@ table(genes)
 This is a useful reminder about the conditions of this experiment: of the 7,127 genes in the tt object, 5,140 are differentially expressed.
 Most experiments will not have this level of differential expression.
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="true" appearance="minimal"}
 # How to include the logFC cutoff too:
 
 If you did want to include the logFC cutoff, you can use the code below.

@@ -68,6 +68,83 @@ Since this issue is caused by an artificially low standard error due to low samp
 - We need to **use a correction - usually FDR**, also called Benjamini and Hochberg correction, but if you want to be more strict use FWER.  
 - We must **correct for heteroskedasticity**, i.e., cases where variance is dependent on the mean.  
 
+## Identifying differentially expressed genes using DESeq2
+
+DESeq2 is a highly-regarded R package for analysing RNA-seq data. DESeq2 uses a [negative binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) method to model the count data, and combines this with a generalised linear model (GLM) to identify differentially expressed genes. For more about the [DESeq2 package](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8), you can read the original article.
+
+### The DESeq2 object
+
+The DESeq2 package requires a specific data storage object called a "DESeq Data Set" or DDS object. The DDS object contains not just the count data, but also the design matrix we created earlier (which is used to specify groups for comparison). This object can be created using a function from the DESeq2 package and requires that we specify a source of count data (as a matrix), column data (column names, mutant and wildtype), and a design matrix (the same one we used for Limma above). Once we have created the dds object, we can view the data stored within using the counts function.
+
+Note that if your data is stored in another format the DESeq2 function we will use to import data can be modified to work on other data formats *e.g.,* a summarisedExperimentObject.
+
+Some set up to run first:
+```{r}
+#| output: false
+library(DESeq2)
+library(dplyr)
+load("counts.RData")
+conds <- c("WT","WT","WT","MT","MT","MT") # set the conditions, note this is in order 
+```
+
+
+Create the DESeq data set object:
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = as.matrix(counts), 
+                              colData = data.frame(conds=factor(conds)), 
+                              design = formula(~conds))
+
+counts(dds) %>% head()
+```
+
+Now fit the DESeq2 generalised linear model to the data.
+
+```{r}
+dds <- DESeq(dds)
+```
+
+Note the outputs from running this function. What are these outputs?
+
+-   **Estimating size factors:** assesses library size and calculates factors to adjust for differences between samples. This also adjusts for compositional differences (*e.g.,* if gene X in sample 1 takes up a very large proportion of all available reads, other genes will have correspondingly fewer genes. If this effect is not uniform across samples, it can be corrected for during this stage).
+
+-   **Dispersion:** adjusting for heteroskedasticity. DESeq2 makes use of variability estimates from not just one gene, but from all genes to make estimates about overall levels of variance. By bringing in (or "borrowing") information from other genes, DESeq2 compensates for a small number of samples (which can lead to artificially small variance estimates otherwise).
+
+-   **Fitting model and testing:** fitting the GLM and identifying differentially expressed genes.
+
+We will now create a new object, res, to store the results in. We can access those results using either the head function or the summary function, which will give us slightly different information - both are valid and useful ways of familiarising yourself with the data.
+
+```{r}
+res <- DESeq2::results(dds)
+
+res %>% head()
+
+res %>% summary()
+```
+
+The res object contains information for all genes tested. It is practical to create a new object that contains only the genes we consider differentially expressed based on the thresholds (p-value, logFC) and methods (e.g., multiple testing adjustment) that suit our situation.
+
+We will remove any rows that have NAs in the results object, then pull out only those with an adjusted p-value less than 0.05.
+
+```{r}
+res <- na.omit(res)
+
+# Keep all rows in the res object if the adjusted p-value < 0.05
+resPadj <- res[res$padj <= 0.05 , ]
+
+resPadjLogFC <- res[res$padj <= 0.05 & abs(res$log2FoldChange) > log2(2),]
+
+# Get dimensions
+resPadj %>% dim()
+resPadjLogFC %>% dim()
+# 1830 x 6
+```
+
+::: {.callout-tip collapse="true"}
+#### **Exercise:** Identify method for multiple testing corrections 
+
+Bioinformatics can often be something of a "black box" - we execute a function by feeding in some data, and get new data as output. It's *very* easy to fall into the trap of believing your data without asking all the necessary questions. For example, we've just used an adjusted p-value for our threshold for significance. Did you question which method was used to adjust for multiple testing? See if you can identify, using the help menu as we've done above, which method was used here. Try and specify a different method for multiple testing corrections and note how this alters your output.
+
+:::
 
 ## Identifying differentially expressed genes using LIMMA
 
@@ -179,9 +256,11 @@ sum(tt$adj.P.Val < 0.01)
 save(tt, file="tt.RData")
 ```
 
-#### **Exercise**
+::: {.callout-tip collapse="true"}
+#### **Exercise:** Find the method for adjusting for multiple testing
 
 Our output includes an adjusted p-value. Use the help function (type a ? in front of any function name) to learn what method was used to adjust for multiple testing. Using information from the help menu, change the correction method to something different. How does this impact your results?
+:::
 
 ### Volcano plots
 
@@ -285,86 +364,21 @@ interactive_plot
 
 ### Differentially expressed genes stored
 
-Let's make an object to store all the information for our list of significantly differentially expressed genes. We will use a threshold of an adjusted p-value \< 0.05 and a logFC \> 1. We will return to this object later, but for now we will move on and identify differentially expressed genes using a different method.
+Let's make an object to store all the information for our list of significantly differentially expressed genes. We will use a threshold of an adjusted p-value \< 0.05 and a logFC \> 1. 
 
 ```{r}
 sigGenesLimma <- which(tt$adj.P.Val <= 0.05 & (abs(tt$logFC) > log2(2)))
 length(sigGenesLimma)
 # 1891
+```
 
+Keep only gene IDs in tt that match vector index positions in sigGenesLimma, and reassign sigGenesLimma with these gene IDs:
+```{r}
 sigGenesLimma <- tt[sigGenesLimma, ]
 ```
 
-## Identifying differentially expressed genes using DESeq2
 
-DESeq2 is a highly-regarded R package for analysing RNA-seq data. DESeq2 uses a [negative binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) method to model the count data, and combines this with a generalised linear model (GLM) to identify differentially expressed genes. For more about the [DESeq2 package](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8), you can read the original article.
-
-### The DESeq2 object
-
-The DESeq2 package requires a specific data storage object called a "DESeq Data Set" or DDS object. The DDS object contains not just the count data, but also the design matrix we created earlier (which is used to specify groups for comparison). This object can be created using a function from the DESeq2 package and requires that we specify a source of count data (as a matrix), column data (column names, mutant and wildtype), and a design matrix (the same one we used for Limma above). Once we have created the dds object, we can view the data stored within using the counts function.
-
-Note that if your data is stored in another format the DESeq2 function we will use to import data can be modified to work on other data formats *e.g.,* a summarisedExperimentObject.
-
-```{r}
-#| output: false
-library(DESeq2)
-```
-
-```{r}
-dds <- DESeqDataSetFromMatrix(countData = as.matrix(counts), 
-                              colData = data.frame(conds=factor(conds)), 
-                              design = formula(~conds))
-
-counts(dds) %>% head()
-```
-
-Now fit the DESeq2 generalised linear model to the data.
-
-```{r}
-dds <- DESeq(dds)
-```
-
-Note the outputs from running this function. What are these outputs?
-
--   **Estimating size factors:** assesses library size and calculates factors to adjust for differences between samples. This also adjusts for compositional differences (*e.g.,* if gene X in sample 1 takes up a very large proportion of all available reads, other genes will have correspondingly fewer genes. If this effect is not uniform across samples, it can be corrected for during this stage).
-
--   **Dispersion:** adjusting for heteroskedasticity. DESeq2 makes use of variability estimates from not just one gene, but from all genes to make estimates about overall levels of variance. By bringing in (or "borrowing") information from other genes, DESeq2 compensates for a small number of samples (which can lead to artificially small variance estimates otherwise).
-
--   **Fitting model and testing:** fitting the GLM and identifying differentially expressed genes.
-
-We will now create a new object, res, to store the results in. We can access those results using either the head function or the summary function, which will give us slightly different information - both are valid and useful ways of familiarising yourself with the data.
-
-```{r}
-res <- DESeq2::results(dds)
-
-res %>% head()
-
-res %>% summary()
-```
-
-The res object contains information for all genes tested. It is practical to create a new object that contains only the genes we consider differentially expressed based on the thresholds (p-value, logFC) and methods (e.g., multiple testing adjustment) that suit our situation.
-
-We will remove any rows that have NAs in the results object, then pull out only those with an adjusted p-value less than 0.05.
-
-```{r}
-res <- na.omit(res)
-
-# Keep all rows in the res object if the adjusted p-value < 0.05
-resPadj <- res[res$padj <= 0.05 , ]
-
-resPadjLogFC <- res[res$padj <= 0.05 & abs(res$log2FoldChange) > log2(2),]
-
-# Get dimensions
-resPadj %>% dim()
-resPadjLogFC %>% dim()
-# 1830 x 6
-```
-
-#### **Exercise:** Identify method for multiple testing corrections
-
-Bioinformatics can often be something of a "black box" - we execute a function by feeding in some data, and get new data as output. It's *very* easy to fall into the trap of believing your data without asking all the necessary questions. For example, we've just used an adjusted p-value for our threshold for significance. Did you question which method was used to adjust for multiple testing? See if you can identify, using the help menu as we've done above, which method was used here. Try and specify a different method for multiple testing corrections and note how this alters your output.
-
-### Differentially expressed gene lists
+## Differentially expressed gene lists
 
 To recap, we've now produced two lists of differentially expressed genes - one produced with the Limma method (called sigGenesLimma), one with DESeq2 (called resPadjLogFC). In both cases we used the same threshold for statistical significance (adjusted p-value \< 0.05, using the FDR correction) and biological significance (logFC more than 1 or less than negative 1, which is equivalent to a doubling or halving gene expression). In our run-through, Limma identified 1,891 differentially expressed genes, while DESeq2 identified 1,830 genes.
 
@@ -384,9 +398,5 @@ venn(setlist)
 
 This is very strong concordance between our two methods and gives us high confidence in our approach. At this point you could take the overlap (n = 1799 genes), take all genes (n = 1799 + 31 + 92), or take genes from just one method (more relevant if one method was conservative compared to the other). Exactly how you resolve this step will depend on the exact shape of your venn diagram and your context.
 
-For simplicity, we will take the list of genes identified by limma. We will save the R object, and then see in the next episode how we can derive meaningful biological information from this long list of genes.
-
-```{r}
-save(sigGenesLimma, file = 'topTable.RData')
-```
+For simplicity, we will take the list of genes identified by limma, which we saved earlier as a tt RData object, and then see in the next episode how we can derive meaningful biological information from this long list of genes.
 

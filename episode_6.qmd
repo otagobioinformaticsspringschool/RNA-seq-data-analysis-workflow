@@ -1,6 +1,8 @@
 ---
-title: Conclusions
+title: ""
 ---
+
+# Conclusions
 
 Here we have presented the typical workflow in an RNA-seq analysis. The expectation is that the major steps we have highlighted are always required, and for each step we have demonstrated a single method. 
 
