@@ -30,7 +30,7 @@ library(tidyr)
 Run the code below to load the file. 
 
 ```bash
-fcData <- read.delim("~/RNA_seq/yeast_counts_all_chr.txt", comment.char="#")
+fcData <- read.delim("~/obss_2025/rnaseq/yeast_counts_all_chr.txt", comment.char="#")
 ```
 
 ::: {.callout-note collapse="true" appearance="simple"}

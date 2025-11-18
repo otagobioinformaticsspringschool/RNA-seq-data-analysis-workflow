@@ -24,7 +24,7 @@ When carrying out alignment, the first requirement is a genome which has been in
 Navigate to the `Genome`{style="color:black"} directory and view the contents using `ls`. You should see two files, a .gtf and a .fa file. We will use the .gtf file towards the end of this episode. 
 
 ```bash
-cd ~/RNA_seq/Genome 
+cd ~/obss_2025/rnaseq/Genome 
 ```
 
 
@@ -55,12 +55,12 @@ Now that we have an indexed genome, we can align our sequences. To do this we wi
 Once we have that information we are ready to align our sequences. Navigate to the `RNA_seq`{style="color:black"} directory, make a new dir called `Mapping`{style="color:black"}, then navigate to the `Trimmed`{style="color:black"} dir and run `hisat2` as a loop to process all samples at once. We will use the `-x` flag to specify the basename of the index, the `-U` flag to specify the comma-separated list of files containing unpaired reads to be aligned, and the `-S` flag to write SAM alignment output files. 
 
 ```bash
-cd ~/RNA_seq
+cd ~/obss_2025/rnaseq
 mkdir Mapping
 ```
 
 ```bash
-cd ~/RNA_seq/Trimmed
+cd ~/obss_2025/rnaseq/Trimmed
 ```
 
 ```bash
@@ -119,7 +119,7 @@ SAM files are tab-delimited text files containing information for each individua
 Navigate to the Mapping dir:
 
 ```bash
-cd ~/RNA_seq/Mapping
+cd ~/obss_2025/rnaseq/Mapping
 ```
 
 We will convert the SAM file to the BAM format using the samtools program with the view command, as a loop. Use the `-S` flag to specify the input is a SAM file, and the `-b` flag to specify BAM as the output.
@@ -161,7 +161,7 @@ HISAT2 output data can be incorporated into the MultiQC report. Copy the summary
 
 Navigate to the updated report and view it in your browser.
 ```bash
-cd ~/RNA_seq/MultiQC
+cd ~/obss_2025/rnaseq/MultiQC
 cp ../Mapping/*summary* ./
 multiqc .
 ```
@@ -180,7 +180,7 @@ Sequencing reads often need to be assigned to genomic features of interest after
 Navigate to the `RNA_seq`{style="color:black"} directory, create a new directory called `Counts`{style="color:black"} and `cd` into that directory. From there run the `featureCounts` command which will require five different flags. We will use the `-a` flag to specify the annotation file, in this case the .gtf file we noticed earlier. The `-o` flag names the output file (which we will call `yeast_counts.txt`), while the `-T` flag specifies the number of threads/CPUs used for mapping. The `-t` flag is used to control the feature type in the GTF annotation file, we will use exon (which is also the default). Finally, the `-g` flag specifies the attribute type in the GTF file. We will use the `gene_id` option (again, the default). 
 
 ```bash
-cd ~/RNA_seq
+cd ~/obss_2025/rnaseq
 mkdir Counts
 cd Counts
 ```
@@ -199,7 +199,7 @@ We have now generated counts! We can now take these through to the next stage of
 Update the MultiQC report by copying over the output data in Counts.
 
 ```bash
-cd ~/RNA_seq/MultiQC
+cd ~/obss_2025/rnaseq/MultiQC
 
 cp ../Counts/* .
 ```
