@@ -17,7 +17,7 @@ A workflow for analysing RNA-seq data, aimed at new users who want to understand
 | 10:50 - 12:15    | [Sequence Quality](episode_1.qmd)                 |
 |      . . .       | [Quantifying Gene Expression](episode_2.qmd)      |
 | 12:15 - 13:00    | LUNCH                                             |
-| 13:00 - 14:30    | [Exploratory analysis](episode_3.qmd)             |
+| 13:00 - 14:40    | [Exploratory analysis](episode_3.qmd)             |
 | 14:40 - 15:00    | BREAK                                             |
 | 15:00 - 16:30    | [Identifying differentially expressed genes](episode_4.qmd)  |
 |     . . .        |[Functional analysis](episode_5.qmd)               |

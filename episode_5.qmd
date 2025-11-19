@@ -151,7 +151,22 @@ tt is 7,127 rows, and has genes stored as row names, includes the logFC, and adj
 
 ```{r}
 load("tt.RData")
+```
 
+::: {.callout-note collapse="true" appearance="simple"}
+# Help! My tt.RData does not exist/did not load in:
+
+In the previous episode we created and saved this tt.RData, but we have stored a copy of it on the GitHub repository that you can load in directly if you don't have it:
+
+```{r}
+#| eval: false
+
+load(url("https://raw.githubusercontent.com/otagobioinformaticsspringschool/RNA-seq-data-analysis-workflow/main/tt.RData"))
+```
+
+:::
+
+```{r}
 genes <- ifelse(tt$adj.P.Val <= 0.05, 1, 0)
 
 names(genes) <- rownames(tt)
@@ -288,13 +303,13 @@ GOTERM[[GO.wall.sig$category[1]]]
 
 GOSeq is a powerful tool that corrects for an important bias in RNA-seq data. There are other options when it comes to over-representation analysis, and functional analysis in general. Some of these tools might help with generating better visualisations, or claim to have more up-to-date databases. 
 
-Here we showed an example of how to run GOseq using annotation data pulled from the AnnotationDbi package and the yeast specific Bioconductor organism annotation packaage org.Sc.sgd.db. But what if you don't have a supported organism, can you still run GOseq? 
+Here we showed an example of how to run GOseq using annotation data pulled from the AnnotationDbi package and the yeast specific Bioconductor organism annotation package org.Sc.sgd.db. But what if you don't have a supported organism, can you still run GOseq? 
 
 Yes you can!
 
 You will need:  
-- A file of your gene IDs in one column, matched to their gene lengths in another column.  
-- A file of your gene IDs in one column, matched to their GO terms in another column.  
+- A file of all your gene IDs (i.e., all your background genes) in one column, matched to their gene lengths in another column.  
+- A file of your gene IDs (i.e., all your background genes in one column, matched to their GO terms in another column.  
 - A list of your DE genes IDs.  
 
 You can generate these yourself, pulling information from the genome, or *de novo* assembled transcriptome data, and if necessary, performing GO annotation manually using software such as BLAST2GO and PFAM2GO or InterPro. 

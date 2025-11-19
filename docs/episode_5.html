@@ -343,18 +343,38 @@ odds ratio
 <p>Note #1: at the end of the previous exercise we also applied a logFC threshold for defining differentially expressed. We won’t use that here and will just use adjusted p-values for simplicity.</p>
 <p>Note #2: the tt object was created when we used limma to identify differentially expressed genes. tt is 7,127 rows, and has genes stored as row names, includes the logFC, and adj.P.Val columns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"tt.RData"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tt<span class="sc">$</span>adj.P.Val <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(genes) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tt)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"tt.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Help! My tt.RData does not exist/did not load in:
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the previous episode we created and saved this tt.RData, but we have stored a copy of it on the GitHub repository that you can load in directly if you don’t have it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/otagobioinformaticsspringschool/RNA-seq-data-analysis-workflow/main/tt.RData"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tt<span class="sc">$</span>adj.P.Val <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(genes) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tt)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>YAL038W YOR161C YML128C YMR105C YHL021C YDR516C 
       1       1       1       1       1       1 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>YOR122C YJR139C YEL046C YDL084W YOR326W YOL120C 
       0       0       0       0       0       0 </code></pre>
@@ -362,7 +382,7 @@ odds ratio
 </div>
 <p>Note #3: because tt is ordered (that is, all the genes with low p values are at the top), it’s worth using tail to check the bottom of the new genes object looks different to the top. Another useful check is to use the <code>table()</code> function to ask how many genes fall into each category.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>genes
    0    1 
@@ -371,7 +391,7 @@ odds ratio
 </div>
 <p>This is a useful reminder about the conditions of this experiment: of the 7,127 genes in the tt object, 5,140 are differentially expressed. Most experiments will not have this level of differential expression.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -380,13 +400,13 @@ How to include the logFC cutoff too:
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>If you did want to include the logFC cutoff, you can use the code below. This gives a more modest 1,891 differentially expressed genes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>genes2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tt<span class="sc">$</span>adj.P.Val <span class="sc">&lt;=</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> (<span class="fu">abs</span>(tt<span class="sc">$</span>logFC) <span class="sc">&gt;</span> <span class="fu">log2</span>(<span class="dv">2</span>)), <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(genes2) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tt)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(genes2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>genes2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tt<span class="sc">$</span>adj.P.Val <span class="sc">&lt;=</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> (<span class="fu">abs</span>(tt<span class="sc">$</span>logFC) <span class="sc">&gt;</span> <span class="fu">log2</span>(<span class="dv">2</span>)), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(genes2) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tt)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(genes2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>genes2
    0    1 
@@ -403,7 +423,7 @@ How to include the logFC cutoff too:
 <p>Remember that we will still use the hypergeometric distribution and Fisher’s Exact test with the 2 x 2 table. Because we know that longer genes are more likely to in the differentially expressed category, we can think of this category as <em>having more weight than it should</em>. GOSeq will calculate a value for each gene which will offset this artificial weight. In other words, if our 2 x 2 table would have 10 genes in the top left square, and some of those genes are very long, GOSeq will treat the number as something slightly less than 10. By treating the value as less than 10, we have taken into account the fact that there shouldn’t <em>really</em> have been 10 genes in there in the first place if not for gene length bias.</p>
 <p>Calculate the weighting that should be assigned to each gene with the Probability Weighting Function (the <code>nullp()</code> function). Specify the object “gene” which is our list of all genes and whether they are differentially expressed or not, as well as the genome (“sacCer1” for our yeast genome), and the gene ID type. This will create a plot in which genes are placed into “bins” based on length, and then gene length vs proportion of differentially expressed is plotted. We can then inspect the pwf object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pwf <span class="ot">=</span> <span class="fu">nullp</span>(genes, <span class="st">"sacCer1"</span>, <span class="st">"ensGene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pwf <span class="ot">=</span> <span class="fu">nullp</span>(genes, <span class="st">"sacCer1"</span>, <span class="st">"ensGene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading sacCer1 length data...</code></pre>
 </div>
@@ -413,11 +433,11 @@ How to include the logFC cutoff too:
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="episode_5_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="episode_5_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pwf <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pwf <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        DEgenes bias.data       pwf
 YAL038W       1      1504 0.8205505
@@ -427,7 +447,7 @@ YMR105C       1      1711 0.8205505
 YHL021C       1      1399 0.8205505
 YDR516C       1      1504 0.8205505</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pwf <span class="sc">%&gt;%</span> <span class="fu">tail</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pwf <span class="sc">%&gt;%</span> <span class="fu">tail</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        DEgenes bias.data       pwf
 YOR122C       0       383 0.5916345
@@ -441,13 +461,13 @@ YOL120C       0       563 0.6975162</code></pre>
 <p>Here we can see that genes have been given a different pwf value based on the bias.data column. The pwf value will be less than 1, and indicates how much a gene should be ‘counted for’ if it is in the differentially expressed category in the 2 x 2 table.</p>
 <p>We can predict that pwf and bias (length) are opposing values, and we can visualise that data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pwf<span class="sc">$</span>bias.data,<span class="dv">30</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pwf<span class="sc">$</span>pwf,<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pwf<span class="sc">$</span>bias.data,<span class="dv">30</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pwf<span class="sc">$</span>pwf,<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="episode_5_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="episode_5_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -455,13 +475,13 @@ YOL120C       0       563 0.6975162</code></pre>
 <p>We have a large number of genes which have low/no bias, and a correspondingly high number of genes with the max pwf weighting. A smaller number of genes have a greater bias and are given lower weighting.</p>
 <p>We can now carry out our Fishers Exact test using the pwf value instead of the raw counts. We will use the <code>goseq()</code> function to perform this test, and output the over-representation data into an object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("org.Sc.sgd.db")</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("AnnotationDbi")</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Sc.sgd.db)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>GO.wall <span class="ot">=</span> <span class="fu">goseq</span>(pwf, <span class="st">"sacCer1"</span>, <span class="st">"ensGene"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>GO.wall <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("org.Sc.sgd.db")</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("AnnotationDbi")</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Sc.sgd.db)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>GO.wall <span class="ot">=</span> <span class="fu">goseq</span>(pwf, <span class="st">"sacCer1"</span>, <span class="st">"ensGene"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>GO.wall <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       category over_represented_pvalue under_represented_pvalue numDEInCat
 1225 GO:0005622            1.963912e-18                        1       4310
@@ -483,19 +503,19 @@ YOL120C       0       563 0.6975162</code></pre>
 <p>You might have noticed that the GO.wall object doesn’t automatically perform an adjustment for multiple testing, so we will use the <code>p.adjust()</code> function to generate corrected p-values.</p>
 <p>We will then use the adjusted p-values as a filtering criteria, and include the columns that correspond to category, term, and ontology (using the <code>colnames()</code> function, we can see that these are columns 1, 6 and 7).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>GO.wall.padj <span class="ot">=</span> <span class="fu">p.adjust</span>(GO.wall<span class="sc">$</span>over_represented_pvalue, <span class="at">method=</span><span class="st">"fdr"</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(GO.wall.padj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>GO.wall.padj <span class="ot">=</span> <span class="fu">p.adjust</span>(GO.wall<span class="sc">$</span>over_represented_pvalue, <span class="at">method=</span><span class="st">"fdr"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(GO.wall.padj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 42</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="ot">=</span> GO.wall[GO.wall.padj <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">7</span>)]</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">dim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="ot">=</span> GO.wall[GO.wall.padj <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">7</span>)]</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">dim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 42  3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       category                                 term ontology
 1225 GO:0005622   intracellular anatomical structure       CC
@@ -509,13 +529,13 @@ YOL120C       0       563 0.6975162</code></pre>
 <p>An optional filtering step can be applied here, which is to remove categories that have a large number of genes. Categories which have a large number of genes tend to be very broad terms, which are not very informative <em>e.g.,</em> the categories “organelle”, “biological_process”, and “protein localization”.</p>
 <p>If you choose to apply this filter, re-make the GO.wall.sig object. Here we are filtering with a requirement that the category contains fewer than 500 genes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="ot">&lt;-</span> GO.wall[GO.wall.padj <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> GO.wall<span class="sc">$</span>numInCat <span class="sc">&lt;</span> <span class="dv">500</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">7</span>)]</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">dim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="ot">&lt;-</span> GO.wall[GO.wall.padj <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> GO.wall<span class="sc">$</span>numInCat <span class="sc">&lt;</span> <span class="dv">500</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">7</span>)]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">dim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 17  3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>GO.wall.sig <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       category                                 term ontology
 4748 GO:0042254                  ribosome biogenesis       BP
@@ -528,9 +548,9 @@ YOL120C       0       563 0.6975162</code></pre>
 </div>
 <p>This is a very useful way of getting a broad overview of what processes our differentially expressed genes are involved in. The final step we will take here is to use the GO.db package to retrieve more detailed information about the categories we have identified. GO.db will use the unique identifier in the category column and provide more information.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GO.db)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>GOTERM[[GO.wall.sig<span class="sc">$</span>category[<span class="dv">1</span>]]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GO.db)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>GOTERM[[GO.wall.sig<span class="sc">$</span>category[<span class="dv">1</span>]]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GOID: GO:0042254
 Term: ribosome biogenesis
@@ -549,11 +569,11 @@ Secondary: GO:0007046</code></pre>
 <section id="closing-thoughts-on-goseq" class="level3">
 <h3 class="anchored" data-anchor-id="closing-thoughts-on-goseq">Closing thoughts on GOseq</h3>
 <p>GOSeq is a powerful tool that corrects for an important bias in RNA-seq data. There are other options when it comes to over-representation analysis, and functional analysis in general. Some of these tools might help with generating better visualisations, or claim to have more up-to-date databases.</p>
-<p>Here we showed an example of how to run GOseq using annotation data pulled from the AnnotationDbi package and the yeast specific Bioconductor organism annotation packaage org.Sc.sgd.db. But what if you don’t have a supported organism, can you still run GOseq?</p>
+<p>Here we showed an example of how to run GOseq using annotation data pulled from the AnnotationDbi package and the yeast specific Bioconductor organism annotation package org.Sc.sgd.db. But what if you don’t have a supported organism, can you still run GOseq?</p>
 <p>Yes you can!</p>
 <p>You will need:<br>
-- A file of your gene IDs in one column, matched to their gene lengths in another column.<br>
-- A file of your gene IDs in one column, matched to their GO terms in another column.<br>
+- A file of all your gene IDs (i.e., all your background genes) in one column, matched to their gene lengths in another column.<br>
+- A file of your gene IDs (i.e., all your background genes in one column, matched to their GO terms in another column.<br>
 - A list of your DE genes IDs.</p>
 <p>You can generate these yourself, pulling information from the genome, or <em>de novo</em> assembled transcriptome data, and if necessary, performing GO annotation manually using software such as BLAST2GO and PFAM2GO or InterPro.</p>
 </section>
@@ -575,7 +595,7 @@ Secondary: GO:0007046</code></pre>
 <p>In any situation where there are multiple tools, methods, or decision points (<em>e.g.,</em> thresholds, removal of outliers <em>etc.,</em>) it is recommended that you complete the analyses and compare the outcomes.</p>
 <p>It is possible to run GOSeq <em>without</em> the length correction implemention (shown below) and compare the over-represented categories. If the difference is large, then you should be cautious when interpreting GSEA results or the output of clusterProfiler.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>GO.nobias<span class="ot">=</span><span class="fu">goseq</span>(pwf, <span class="st">"sacCer1"</span>, <span class="st">"ensGene"</span>, <span class="at">method=</span><span class="st">"Hypergeometric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>GO.nobias<span class="ot">=</span><span class="fu">goseq</span>(pwf, <span class="st">"sacCer1"</span>, <span class="st">"ensGene"</span>, <span class="at">method=</span><span class="st">"Hypergeometric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Fetching GO annotations...</code></pre>
 </div>
@@ -594,7 +614,7 @@ Secondary: GO:0007046</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>'select()' returned 1:1 mapping between keys and columns</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>GO.nobias <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>GO.nobias <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       category over_represented_pvalue under_represented_pvalue numDEInCat
 1225 GO:0005622            4.303709e-29                        1       4310
